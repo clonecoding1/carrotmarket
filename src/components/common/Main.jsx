@@ -14,6 +14,5 @@ export default Main
 
 const StMain = styled.main`
   flex: 1;
-  background-color: cadetblue;
   overflow: auto;
 `

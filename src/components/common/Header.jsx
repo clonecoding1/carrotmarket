@@ -10,7 +10,7 @@ const Header = (props) => {
 
 export default Header
 
-const StHeader = styled.footer`
+const StHeader = styled.header`
   height: 100px;
   background-color: blue;
 `
