@@ -1,16 +1,13 @@
 import styled from "styled-components";
 
 const Header = (props) => {
-  return (
-    <StHeader>
-      {props.children}
-    </StHeader>
-  )
-}
+  return <StHeader>{props.children}</StHeader>;
+};
 
-export default Header
+export default Header;
 
 const StHeader = styled.footer`
   height: 100px;
   background-color: blue;
-`
+  padding: 0 20px;
+`;
