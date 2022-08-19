@@ -4,15 +4,14 @@ import Main from "./components/common/Main";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 
-
 function App() {
   return (
     <Layout>
-      <Header/>
+      <Header />
       <Main>
-        <Router/>
+        <Router />
       </Main>
-      <Footer/>
+      <Footer />
     </Layout>
   );
 }
