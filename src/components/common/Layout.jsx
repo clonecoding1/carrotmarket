@@ -1,12 +1,10 @@
 import styled from "styled-components";
 
 const Layout = (props) => {
-  return (
-    <StLayout>{props.children}</StLayout>
-  )
-}
+  return <StLayout>{props.children}</StLayout>;
+};
 
-export default Layout
+export default Layout;
 
 const StLayout = styled.div`
   height: 100vh;
@@ -14,4 +12,4 @@ const StLayout = styled.div`
   flex-direction: column;
   max-width: 600px;
   margin: 0 auto;
-`
+`;
