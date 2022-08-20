@@ -6,7 +6,7 @@ import jwtDecode from "jwt-decode";
 const initialState = {
   isLogin: false,
   userToken: null,
-  user:null
+  user: null
 };
 
 // reducer counterSlice
@@ -17,17 +17,17 @@ export const tokenSlice = createSlice({
     logOut: (state, action) => {
       removeCookie("token")
       state.isLogin = false;
-      state.userToken= null
+      state.userToken = null
     },
     logIn: (state, action) => {
       state.isLogin = true;
-      state.userToken= getCookie("token")
+      state.userToken = getCookie("token")
     },
-    getUserInfo: (state,action) => {
+    getUserInfo: (state, action) => {
       state.user = jwtDecode(getCookie("token"))
     }
   },
 });
 
-export const {logOut, logIn,getUserInfo} = tokenSlice.actions;
+export const {logOut, logIn, getUserInfo} = tokenSlice.actions;
 export default tokenSlice.reducer;

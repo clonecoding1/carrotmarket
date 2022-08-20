@@ -14,7 +14,6 @@ function App() {
   const dispatch=useDispatch()
   if(getCookie("token")) {
     dispatch(logIn())
-    console.log("로그인했냐")
   }
   return (
     <Layout>

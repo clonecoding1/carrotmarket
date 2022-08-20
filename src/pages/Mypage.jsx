@@ -19,15 +19,14 @@ const Mypage = () => {
   const [userLikeList, setUserLikeList] = useState([])
   const {isLogin, userToken, user} = useSelector((state) => state.tokenSlice)
   useEffect(() => {
-    setTimeout(() => {
       if (isLogin === false) {
         alert("권한이없습니다.")
         navigate("/", {replace: true})
       } else {
         dispatch(getUserInfo())
       }
-    }, 100)
   }, [])
+
 
   // useEffect(()=> {
   //   getUser().then((res)=> {
@@ -43,8 +42,6 @@ const Mypage = () => {
     }
     getUser()
   }, [])
-
-  console.log(userInfo.user)
 
   // console.log(userInformation.likeList)
 
@@ -221,7 +218,7 @@ const StMypage = styled.div`
         box-shadow: 0 0.3rem 0.3rem -0.3rem;
 
         &:last-child {
-          border-bottom: none;
+          box-shadow: none;
         }
       }
     }
