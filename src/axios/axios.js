@@ -7,5 +7,9 @@ const instance = axios.create({
   },
   timeout: 2000,
 });
+instance.interceptors.request.use((config) => {
+  // console.log(config);
+  return config;
+});
 
 export default instance;
