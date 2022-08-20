@@ -22,7 +22,17 @@ const Header = () => {
         />
       )}
       <SearchInput type="search" placeholder="검색창" />
-      <Btn onClick={login ? null : null}>Log{login ? "out" : "in"}</Btn>
+      <Btn
+        onClick={
+          login
+            ? null
+            : () => {
+                nav("/login");
+              }
+        }
+      >
+        Log{login ? "out" : "in"}
+      </Btn>
     </StHeader>
   );
 };
@@ -65,7 +75,6 @@ const UserLocationInfo = styled.div`
   width: 5rem;
   height: 5rem;
 `;
-
 
 const SearchInput = styled.input`
   height: 3rem;
