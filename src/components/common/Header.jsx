@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const nav = useNavigate();
   const [login, setLogin] = useState(false);
-
   return (
     <StHeader>
       {login ? (
@@ -13,7 +14,12 @@ const Header = () => {
           <IoIosArrowDown style={{ marginLeft: ".2rem" }} />
         </UserLocationInfo>
       ) : (
-        <LogoImg src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/DaangnMarket_logo.png/800px-DaangnMarket_logo.png" />
+        <LogoImg
+          onClick={() => {
+            nav("/");
+          }}
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/DaangnMarket_logo.png/800px-DaangnMarket_logo.png"
+        />
       )}
       <SearchInput type="search" placeholder="검색창" />
       <Btn onClick={login ? null : null}>Log{login ? "out" : "in"}</Btn>
@@ -33,6 +39,7 @@ const StHeader = styled.header`
 `;
 
 const LogoImg = styled.img`
+  cursor: pointer;
   width: 5rem;
   height: 5rem;
 `;
@@ -63,7 +70,7 @@ const UserLocationInfo = styled.div`
 const SearchInput = styled.input`
   height: 3rem;
   padding: 0 0.5rem;
-  background: rgba(0, 0, 0, 0.1);
+  background: #dadada;
   border: 0;
   border-radius: 0.5rem;
   &:focus {
