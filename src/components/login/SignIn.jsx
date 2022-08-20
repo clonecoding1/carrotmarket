@@ -1,8 +1,44 @@
 import styled from "styled-components";
 import {useForm} from "react-hook-form";
 import {useRef} from "react";
+import axios from "axios";
+import api from "../../axios/loginInstance";
+import {getCookie, setCookie} from "../../utils/Cookie";
+import {useNavigate} from "react-router-dom";
+import Swal from "sweetalert2";
 
 const SignIn = ({goSignup}) => {
+  const navigate = useNavigate()
+  const {register, watch, handleSubmit, formState: {isSubmitting, errors}} = useForm();
+  const email = useRef()
+  const password = useRef()
+  email.current = watch("email")
+  password.current = watch("password")
+
+  const alerts = () => {
+    Swal.fire({ icon: "error", text: "로그아웃 후 이용해주세요" })
+      .then((res)=> {
+        navigate("/",{replace:true})
+      });
+  };
+
+  if(getCookie("token")) {
+    alerts()
+    return
+  }
+  const onSubmit = (data) => {
+    try {
+      api.postLogin(data)
+        .then((res)=> {
+          setCookie("token", res.data.accessToken)
+          navigate("/",{replace:true})
+        }).catch((rej)=> {
+          console.log(rej)
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <StSignIn>
@@ -14,29 +50,54 @@ const SignIn = ({goSignup}) => {
         <p>
           이메일은 안전하게 보관되며 이웃들에게 공개되지 않아요
         </p>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <StInputWrapper>
             <input
-              id="email"
-              type="email"
+              type="text"
               placeholder="test@email.com"
+              {...register("email", {
+                required: true,
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "이메일 형식에 맞지 않습니다.",
+                }
+              })}
             />
+            {errors.email && errors.email.type === "required" && <p className={"warning"}>이메일은 필수 입력사항입니다</p>}
+            {errors.email && errors.email.type === "pattern" && <p className={"warning"}>이메일 형식에 맞지 않습니다</p>}
           </StInputWrapper>
           <StInputWrapper>
             <input
-              id="password"
               type="password"
               placeholder="****************"
+              {...register("password", {
+                required: true,
+                minLength: {
+                  value: 8,
+                  message: "8자리 이상 비밀번호를 사용하세요"
+                },
+                pattern: {
+                  value: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+                  message: "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다"
+                },
+              })}
             />
+            {errors.password && errors.password.type === "required" && <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>}
+            {errors.password && errors.password.type === "minLength" &&
+              <p className={"warning"}>{errors.password.message}</p>}
+            {errors.password && errors.password.type === "pattern" &&
+              <p className={"warning"}>{errors.password.message}</p>}
           </StInputWrapper>
           <StButtonWrapper>
-            <StButton type="submit">로그인</StButton>
+            <StButton type="submit" disabled={isSubmitting}>로그인</StButton>
           </StButtonWrapper>
         </form>
       </div>
-      <StSignupButton onClick={goSignup}>
-        계정이 없으신가요? <span>회원가입</span>
-      </StSignupButton>
+      <div className={"buttonWrapper"}>
+        <StSignupButton onClick={goSignup}>
+          계정이 없으신가요? <span>회원가입</span>
+        </StSignupButton>
+      </div>
     </StSignIn>
   )
 }
@@ -48,14 +109,15 @@ const StSignIn = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+
   & h2 {
     margin-top: 3rem;
     margin-bottom: 1rem;
-    font-size: 2.4rem;
+    font-size: 2.2rem;
   }
 
   & p {
-    font-size: 16px;
+    font-size: 1.6rem;
   }
 
   & form {
@@ -67,12 +129,22 @@ const StInputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
+  position: relative;
 
   & input {
     margin: 1rem 0;
     padding: 1.5rem;
     border-radius: 1rem;
     border: 1px solid #c9c9c9;
+  }
+
+  & .warning {
+    position: absolute;
+    bottom: -1.5rem;
+    left: 1rem;
+    color: #ff7c7c;
+    font-weight: 700;
+    font-size: 1.4rem;
   }
 `
 
@@ -93,8 +165,9 @@ const StButton = styled.button`
 `
 
 const StSignupButton = styled.button`
-  border-radius: 10px;
-  margin: 1rem 0;
+  border-radius: 1rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
   padding: 2rem;
   width: 100%;
   background-color: #ffd9c4;
