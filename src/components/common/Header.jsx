@@ -66,6 +66,7 @@ const UserLocationInfo = styled.div`
   height: 5rem;
 `;
 
+
 const SearchInput = styled.input`
   height: 3rem;
   padding: 0 0.5rem;
