@@ -1,14 +1,20 @@
 import styled from "styled-components";
 import { IoIosArrowDown } from "react-icons/io";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {logIn, logOut} from "../../redux/modules/tokenSlice";
+import {getCookie} from "../../utils/cookie";
 
 const Header = () => {
   const nav = useNavigate();
-  const [login, setLogin] = useState(false);
+  const dispatch = useDispatch()
+
+  const {isLogin, userToken} = useSelector((state)=> state.tokenSlice)
+
   return (
     <StHeader>
-      {login ? (
+      {isLogin ? (
         <UserLocationInfo className="fcc">
           수도권
           <IoIosArrowDown style={{ marginLeft: ".2rem" }} />
@@ -24,14 +30,18 @@ const Header = () => {
       <SearchInput type="search" placeholder="검색창" />
       <Btn
         onClick={
-          login
-            ? null
+          isLogin
+            ? ()=> {
+            alert("로그아웃 하셨습니다.")
+              dispatch(logOut())
+            nav("/")
+            }
             : () => {
                 nav("/login");
               }
         }
       >
-        Log{login ? "out" : "in"}
+        Log{isLogin ? "out" : "in"}
       </Btn>
     </StHeader>
   );

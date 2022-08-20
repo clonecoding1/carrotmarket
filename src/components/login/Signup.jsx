@@ -97,6 +97,7 @@ const Signup = ({ goSignin }) => {
               ref={email}
               type="text"
               placeholder="test@email.com"
+              autoComplete="off"
               {...register("email", {
                 required: true,
                 pattern: {
@@ -119,6 +120,7 @@ const Signup = ({ goSignin }) => {
               ref={nickname}
               type="text"
               placeholder="닉네임"
+              autoComplete="off"
               {...register("nickname", {
                 required: true,
                 minLength: {
@@ -143,6 +145,7 @@ const Signup = ({ goSignin }) => {
               ref={password}
               type="password"
               placeholder="비밀번호"
+              autoComplete="off"
               {...register("password", {
                 required: true,
                 minLength: {
@@ -163,6 +166,7 @@ const Signup = ({ goSignin }) => {
             <input
               type="password"
               placeholder="비밀번호 재확인"
+              autoComplete="off"
               {...register("confirmPassword", {
                 required: true,
                 validate: (value) => value === password.current,

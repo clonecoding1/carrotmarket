@@ -1,48 +1,50 @@
 import styled from "styled-components";
-import { useForm } from "react-hook-form";
-import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import {useForm} from "react-hook-form";
+import {useEffect, useRef} from "react";
+import {useNavigate} from "react-router-dom";
 import Swal from "sweetalert2";
 
-import { postLogin } from "../../api/loginAPI";
-import { getCookie, setCookie } from "../../utils/cookie";
+import {postLogin} from "../../api/loginAPI";
+import {getCookie, setCookie} from "../../utils/cookie";
+import {useDispatch, useSelector} from "react-redux";
+import {logIn} from "../../redux/modules/tokenSlice";
 
-const SignIn = ({ goSignup }) => {
+const SignIn = ({goSignup}) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const {
     register,
     watch,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: {isSubmitting, errors},
   } = useForm();
   const email = useRef();
   const password = useRef();
   email.current = watch("email");
   password.current = watch("password");
 
+  const {isLogin, userToken} = useSelector((state) => state.tokenSlice)
+
   const alerts = () => {
-    Swal.fire({ icon: "error", text: "로그아웃 후 이용해주세요" }).then((res) => {
-      navigate("/", { replace: true });
+    Swal.fire({icon: "error", text: "로그아웃 후 이용해주세요"}).then((res) => {
+      navigate("/", {replace: true});
     });
   };
 
-  if (getCookie("token")) {
-    alerts();
-    return;
-  }
-  const onSubmit = (data) => {
-    try {
-      postLogin(data)
-        .then((res) => {
-          setCookie("token", res.data.accessToken);
-          navigate("/", { replace: true });
-        })
-        .catch((rej) => {
-          console.log(rej);
-        });
-    } catch (err) {
-      console.log(err);
+  useEffect(()=> {
+    if (userToken!==null) {
+      alerts();
+      return;
     }
+  },[])
+
+  const onSubmit = (data) => {
+    postLogin(data)
+      .then((res) => {
+        setCookie("token", res.res.accessToken);
+        dispatch(logIn())
+        navigate("/", {replace: true});
+      })
   };
 
   return (
@@ -50,7 +52,7 @@ const SignIn = ({ goSignup }) => {
       <div>
         <h2>
           안녕하세요!
-          <br />
+          <br/>
           이메일로 로그인 해주세요.
         </h2>
         <p>이메일은 안전하게 보관되며 이웃들에게 공개되지 않아요</p>
@@ -75,6 +77,7 @@ const SignIn = ({ goSignup }) => {
             <input
               type="password"
               placeholder="****************"
+              autoComplete="off"
               {...register("password", {
                 required: true,
                 minLength: {
@@ -88,8 +91,10 @@ const SignIn = ({ goSignup }) => {
               })}
             />
             {errors.password && errors.password.type === "required" && <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>}
-            {errors.password && errors.password.type === "minLength" && <p className={"warning"}>{errors.password.message}</p>}
-            {errors.password && errors.password.type === "pattern" && <p className={"warning"}>{errors.password.message}</p>}
+            {errors.password && errors.password.type === "minLength" &&
+              <p className={"warning"}>{errors.password.message}</p>}
+            {errors.password && errors.password.type === "pattern" &&
+              <p className={"warning"}>{errors.password.message}</p>}
           </StInputWrapper>
           <StButtonWrapper>
             <StButton type="submit" disabled={isSubmitting}>

@@ -4,15 +4,20 @@ import { IoPerson, IoPersonOutline, IoChatbubblesSharp, IoChatbubblesOutline } f
 import { useState } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const Footer = () => {
   const nav = useNavigate();
   const [login, setLogin] = useState(false);
+  const {isLogin, userToken} = useSelector((state)=> state.tokenSlice)
   const pathname = useLocation().pathname;
+
   return (
     <StFooter>
       <FooterNav>
-        <li>
+        <li onClick={()=> {
+          nav("/")
+        }}>
           {pathname === "/" ? <RiHome2Fill /> : <RiHome2Line />}
           <p>홈</p>
         </li>
@@ -20,7 +25,15 @@ const Footer = () => {
           <IoChatbubblesOutline />
           <p>채팅</p>
         </li>
-        <li>
+        <li onClick={
+          isLogin
+            ? ()=> {
+            nav("/mypage")
+            }
+            : () => {
+            alert("로그인후 이용 가능합니다")
+            }
+        }>
           {pathname === "/mypage" ? <IoPerson /> : <IoPersonOutline />}
           <p>나의 당근</p>
         </li>
