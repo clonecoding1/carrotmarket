@@ -3,7 +3,10 @@ import { RiHome2Fill, RiHome2Line } from "react-icons/ri";
 import { IoPerson, IoPersonOutline, IoChatbubblesSharp, IoChatbubblesOutline } from "react-icons/io5";
 import { useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 const Footer = () => {
+  const nav = useNavigate();
   const [login, setLogin] = useState(false);
   return (
     <StFooter>
@@ -24,7 +27,14 @@ const Footer = () => {
         </FooterNav>
       ) : (
         <SignUpArea className="fcc" style={{ flexFlow: "column" }}>
-          <p>아직 회원이 아니신가요?</p>
+          <button
+            onClick={() => {
+              nav("/write");
+            }}
+          >
+            게시글 이동
+          </button>
+          {/* <p>아직 회원이 아니신가요?</p> */}
           <Btn>회원가입</Btn>
         </SignUpArea>
       )}
