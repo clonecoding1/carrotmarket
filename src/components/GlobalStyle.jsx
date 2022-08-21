@@ -33,7 +33,7 @@ const GlobalStyle = createGlobalStyle`
     position: relative;
     left: 0;
     height: 100%;
-    padding: 0 20px;
+    padding: 0 2rem;
     transition: 0.5s ease-in-out;
     opacity: 1;
     overflow: auto;
@@ -53,7 +53,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: 2rem;
     display: flex;
     flex-direction: column;
-    padding: 0 20px;
+    padding: 0 2rem;
     transition: 0.5s ease-in-out;
     opacity: 0;
     overflow: auto;

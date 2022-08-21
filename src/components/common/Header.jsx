@@ -1,23 +1,21 @@
 import styled from "styled-components";
-import { IoIosArrowDown } from "react-icons/io";
-import {useEffect, useState} from "react";
-import { useNavigate } from "react-router-dom";
+import {IoIosArrowDown} from "react-icons/io";
+import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {logIn, logOut} from "../../redux/modules/tokenSlice";
-import {getCookie} from "../../utils/cookie";
+import {logOut} from "../../redux/modules/tokenSlice";
 
 const Header = () => {
   const nav = useNavigate();
   const dispatch = useDispatch()
 
-  const {isLogin, userToken} = useSelector((state)=> state.tokenSlice)
+  const {isLogin} = useSelector((state) => state.tokenSlice)
 
   return (
     <StHeader>
       {isLogin ? (
         <UserLocationInfo className="fcc">
           수도권
-          <IoIosArrowDown style={{ marginLeft: ".2rem" }} />
+          <IoIosArrowDown style={{marginLeft: ".2rem"}}/>
         </UserLocationInfo>
       ) : (
         <LogoImg
@@ -27,18 +25,18 @@ const Header = () => {
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/DaangnMarket_logo.png/800px-DaangnMarket_logo.png"
         />
       )}
-      <SearchInput type="search" placeholder="검색창" />
+      <SearchInput type="search" placeholder="검색창"/>
       <Btn
         onClick={
           isLogin
-            ? ()=> {
-            alert("로그아웃 하셨습니다.")
+            ? () => {
+              alert("로그아웃 하셨습니다.")
               dispatch(logOut())
-            nav("/")
+              nav("/")
             }
             : () => {
-                nav("/login");
-              }
+              nav("/login");
+            }
         }
       >
         Log{isLogin ? "out" : "in"}
@@ -50,7 +48,7 @@ const Header = () => {
 export default Header;
 
 const StHeader = styled.header`
-  height: 8rem;
+  min-height: 8rem;
   padding: 0 2rem;
   display: flex;
   justify-content: space-between;
@@ -92,9 +90,11 @@ const SearchInput = styled.input`
   background: #dadada;
   border: 0;
   border-radius: 0.5rem;
+
   &:focus {
     outline: 2px solid rgb(255, 138, 61);
   }
+
   &::-webkit-search-decoration,
   &::-webkit-search-cancel-button,
   &::-webkit-search-results-button,

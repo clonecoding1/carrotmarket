@@ -1,40 +1,49 @@
 import styled from "styled-components";
-import { RiHome2Fill, RiHome2Line } from "react-icons/ri";
-import { IoPerson, IoPersonOutline, IoChatbubblesSharp, IoChatbubblesOutline } from "react-icons/io5";
-import { useState } from "react";
+import {RiHome2Fill, RiHome2Line} from "react-icons/ri";
+import {IoPerson, IoPersonOutline, IoChatbubblesSharp, IoChatbubblesOutline} from "react-icons/io5";
+import {useState} from "react";
 
-import { useLocation, useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
+import Swal from "sweetalert2";
 
 const Footer = () => {
   const nav = useNavigate();
   const [login, setLogin] = useState(false);
-  const {isLogin, userToken} = useSelector((state)=> state.tokenSlice)
+  const {isLogin, userToken} = useSelector((state) => state.tokenSlice)
   const pathname = useLocation().pathname;
+
+  const alerts = () => {
+    Swal.fire({icon: "error", text: "로그인 후 이용해주세요"}).then((res) => {
+      nav("/", {replace: true});
+    });
+  };
+  
+
 
   return (
     <StFooter>
       <FooterNav>
-        <li onClick={()=> {
+        <li onClick={() => {
           nav("/")
         }}>
-          {pathname === "/" ? <RiHome2Fill /> : <RiHome2Line />}
+          {pathname === "/" ? <RiHome2Fill/> : <RiHome2Line/>}
           <p>홈</p>
         </li>
         <li>
-          <IoChatbubblesOutline />
+          <IoChatbubblesOutline/>
           <p>채팅</p>
         </li>
         <li onClick={
           isLogin
-            ? ()=> {
-            nav("/mypage")
+            ? () => {
+              nav("/mypage")
             }
             : () => {
-            alert("로그인후 이용 가능합니다")
+              alerts()
             }
         }>
-          {pathname === "/mypage" ? <IoPerson /> : <IoPersonOutline />}
+          {pathname === "/mypage" ? <IoPerson/> : <IoPersonOutline/>}
           <p>나의 당근</p>
         </li>
       </FooterNav>
@@ -45,7 +54,7 @@ const Footer = () => {
 export default Footer;
 
 const StFooter = styled.footer`
-  height: 8rem;
+  min-height: 8rem;
   padding: 0 2rem;
 
   display: flex;
@@ -61,6 +70,7 @@ const FooterNav = styled.ul`
   align-items: center;
   width: 100%;
   font-size: 4rem;
+
   li {
     width: 6rem;
     display: flex;
@@ -68,10 +78,12 @@ const FooterNav = styled.ul`
     align-items: center;
     flex-flow: column;
   }
+
   li:hover {
     cursor: pointer;
     color: rgb(255, 138, 61);
   }
+
   p {
     font-size: 1.5rem;
   }

@@ -168,7 +168,7 @@ const StButton = styled.button`
   margin: 1rem 0;
   padding: 1.5rem;
   border: none;
-  font-size: 18px;
+  font-size: 1.8rem;
   background-color: #ff7e36;
   color: #ffffff;
   border-radius: 10px;
@@ -188,7 +188,7 @@ const StSignupButton = styled.button`
 
   & span {
     font-weight: bold;
-    margin-left: 10px;
+    margin-left: 1rem;
     font-size: 1.8rem;
     color: #ff7e36;
   }

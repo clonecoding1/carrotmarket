@@ -208,7 +208,7 @@ const StSignup = styled.div`
   }
 
   & p {
-    font-size: 16px;
+    font-size: 1.6rem;
   }
 
   & form {
@@ -231,7 +231,7 @@ const StInputWrapper = styled.div`
   }
 
   & button {
-    width: 100px;
+    width: 10rem;
     margin-left: 1rem;
     height: 5.1rem;
     border-radius: 10px;

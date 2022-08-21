@@ -9,6 +9,7 @@ import axios from "../axios/axios";
 import {IoIosArrowDown} from "react-icons/io";
 import {SiInstacart} from "react-icons/si";
 import {AiOutlineHeart, AiTwotoneHeart} from "react-icons/ai";
+import Swal from "sweetalert2";
 
 const Mypage = () => {
   const navigate = useNavigate()
@@ -18,26 +19,27 @@ const Mypage = () => {
   const [userInfo, setUserInfo] = useState({})
   const [userLikeList, setUserLikeList] = useState([])
   const {isLogin, userToken, user} = useSelector((state) => state.tokenSlice)
+
+  const alerts = () => {
+    Swal.fire({icon: "error", text: "로그인 후 이용해주세요"}).then((res) => {
+      navigate("/", {replace: true});
+    });
+  };
+
   useEffect(() => {
       if (isLogin === false) {
-        alert("권한이없습니다.")
+        alerts()
         navigate("/", {replace: true})
       } else {
         dispatch(getUserInfo())
       }
   }, [])
 
-
-  // useEffect(()=> {
-  //   getUser().then((res)=> {
-  //     console.log(res)
-  //   })
-  // })
-
   useEffect(() => {
     const getUser = async () => {
       const data = await axios.get(`http://localhost:5000/users?id=19`)
       setUserInfo(data.data[0].user)
+      
       setUserLikeList(data.data[0].likeList)
     }
     getUser()
@@ -87,7 +89,7 @@ const Mypage = () => {
                 <div className="center">
                   <div className="title">{data.title}</div>
                   <div className="location">{data.location}</div>
-                  <div className="price">{data.price}원</div>
+                  <div className="price">{(data.price).toLocaleString()}원</div>
                 </div>
                 <div className="right">
                   <div className="heart">
@@ -263,6 +265,15 @@ const StMypage = styled.div`
         align-items: center;
         justify-content: flex-end;
         font-size: 2.3rem;
+      }
+      
+      & .heartCount {
+        display: flex;
+        align-items: center;
+        
+        & svg {
+          margin-top: 2px;
+        }
       }
     }
   }
