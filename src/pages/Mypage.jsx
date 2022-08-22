@@ -8,6 +8,7 @@ import { SiInstacart } from "react-icons/si";
 import { AiOutlineHeart, AiTwotoneHeart } from "react-icons/ai";
 import Swal from "sweetalert2";
 import { deleteUser } from "../api/mypageAPI";
+import { getUser } from "./../api/mypageAPI";
 
 const Mypage = () => {
   const navigate = useNavigate();
@@ -56,12 +57,9 @@ const Mypage = () => {
   }, []);
 
   useEffect(() => {
-    const getUser = async () => {
-      const data = await axios.get(`http://localhost:5000/users?id=19`);
-      setUserInfo(data.data[0].user);
-      setUserLikeList(data.data[0].likeList);
-    };
-    getUser();
+    getUser().then((res) => {
+      console.log(res);
+    });
   }, []);
 
   const onDeleteHandler = () => {
