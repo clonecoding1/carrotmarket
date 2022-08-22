@@ -16,7 +16,8 @@ export const getPostOne = async (postId) => {
   let answer = { result: null };
   try {
     const res = await axios.get(`/post/${postId}`);
-    answer.post = res.data;
+    console.log(res);
+    answer.post = res.data.data;
     answer.result = true;
   } catch (err) {
     console.log(err);
