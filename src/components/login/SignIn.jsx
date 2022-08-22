@@ -1,50 +1,51 @@
 import styled from "styled-components";
-import {useForm} from "react-hook-form";
-import {useEffect, useRef} from "react";
-import {useNavigate} from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-import {postLogin} from "../../api/loginAPI";
-import {getCookie, setCookie} from "../../utils/cookie";
-import {useDispatch, useSelector} from "react-redux";
-import {logIn} from "../../redux/modules/tokenSlice";
+import { postLogin } from "../../api/loginAPI";
+import { setCookie } from "../../utils/cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { logIn } from "../../redux/modules/tokenSlice";
 
-const SignIn = ({goSignup}) => {
+const SignIn = ({ goSignup }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const {
     register,
     watch,
     handleSubmit,
-    formState: {isSubmitting, errors},
+    formState: { isSubmitting, errors },
   } = useForm();
   const email = useRef();
   const password = useRef();
   email.current = watch("email");
   password.current = watch("password");
 
-  const {isLogin, userToken} = useSelector((state) => state.tokenSlice)
+  const { userToken } = useSelector((state) => state.tokenSlice);
 
   const alerts = () => {
-    Swal.fire({icon: "error", text: "로그아웃 후 이용해주세요"}).then((res) => {
-      navigate("/", {replace: true});
-    });
+    Swal.fire({ icon: "error", text: "로그아웃 후 이용해주세요" }).then(
+      (res) => {
+        navigate("/", { replace: true });
+      }
+    );
   };
 
-  useEffect(()=> {
-    if (userToken!==null) {
+  useEffect(() => {
+    if (userToken !== null) {
       alerts();
       return;
     }
-  },[])
+  }, []);
 
   const onSubmit = (data) => {
-    postLogin(data)
-      .then((res) => {
-        setCookie("token", res.res.accessToken);
-        dispatch(logIn())
-        navigate("/", {replace: true});
-      })
+    postLogin(data).then((res) => {
+      setCookie("token", res.res.accessToken);
+      dispatch(logIn());
+      navigate("/", { replace: true });
+    });
   };
 
   return (
@@ -52,7 +53,7 @@ const SignIn = ({goSignup}) => {
       <div>
         <h2>
           안녕하세요!
-          <br/>
+          <br />
           이메일로 로그인 해주세요.
         </h2>
         <p>이메일은 안전하게 보관되며 이웃들에게 공개되지 않아요</p>
@@ -70,8 +71,12 @@ const SignIn = ({goSignup}) => {
                 },
               })}
             />
-            {errors.email && errors.email.type === "required" && <p className={"warning"}>이메일은 필수 입력사항입니다</p>}
-            {errors.email && errors.email.type === "pattern" && <p className={"warning"}>이메일 형식에 맞지 않습니다</p>}
+            {errors.email && errors.email.type === "required" && (
+              <p className={"warning"}>이메일은 필수 입력사항입니다</p>
+            )}
+            {errors.email && errors.email.type === "pattern" && (
+              <p className={"warning"}>이메일 형식에 맞지 않습니다</p>
+            )}
           </StInputWrapper>
           <StInputWrapper>
             <input
@@ -85,16 +90,22 @@ const SignIn = ({goSignup}) => {
                   message: "8자리 이상 비밀번호를 사용하세요",
                 },
                 pattern: {
-                  value: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
-                  message: "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다",
+                  value:
+                    /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+                  message:
+                    "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다",
                 },
               })}
             />
-            {errors.password && errors.password.type === "required" && <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>}
-            {errors.password && errors.password.type === "minLength" &&
-              <p className={"warning"}>{errors.password.message}</p>}
-            {errors.password && errors.password.type === "pattern" &&
-              <p className={"warning"}>{errors.password.message}</p>}
+            {errors.password && errors.password.type === "required" && (
+              <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>
+            )}
+            {errors.password && errors.password.type === "minLength" && (
+              <p className={"warning"}>{errors.password.message}</p>
+            )}
+            {errors.password && errors.password.type === "pattern" && (
+              <p className={"warning"}>{errors.password.message}</p>
+            )}
           </StInputWrapper>
           <StButtonWrapper>
             <StButton type="submit" disabled={isSubmitting}>

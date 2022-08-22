@@ -9,7 +9,7 @@ const instance = axios.create({
   timeout: 2000,
 });
 instance.interceptors.request.use((config) => {
-  config.headers["Authorization"] = "Bearer" + " " + getCookie("token")
+  config.headers["Authorization"] = "Bearer " + getCookie("token")
   return config;
 });
 
