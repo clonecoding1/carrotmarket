@@ -1,14 +1,17 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import { postLogin } from "../../api/loginAPI";
-import { getCookie, setCookie } from "../../utils/cookie";
+import { setCookie } from "../../utils/cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { logIn } from "../../redux/modules/tokenSlice";
 
 const SignIn = ({ goSignup }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     register,
     watch,
@@ -20,29 +23,29 @@ const SignIn = ({ goSignup }) => {
   email.current = watch("email");
   password.current = watch("password");
 
+  const { userToken } = useSelector((state) => state.tokenSlice);
+
   const alerts = () => {
-    Swal.fire({ icon: "error", text: "로그아웃 후 이용해주세요" }).then((res) => {
-      navigate("/", { replace: true });
-    });
+    Swal.fire({ icon: "error", text: "로그아웃 후 이용해주세요" }).then(
+      (res) => {
+        navigate("/", { replace: true });
+      }
+    );
   };
 
-  if (getCookie("token")) {
-    alerts();
-    return;
-  }
-  const onSubmit = (data) => {
-    try {
-      postLogin(data)
-        .then((res) => {
-          setCookie("token", res.data.accessToken);
-          navigate("/", { replace: true });
-        })
-        .catch((rej) => {
-          console.log(rej);
-        });
-    } catch (err) {
-      console.log(err);
+  useEffect(() => {
+    if (userToken !== null) {
+      alerts();
+      return;
     }
+  }, []);
+
+  const onSubmit = (data) => {
+    postLogin(data).then((res) => {
+      setCookie("token", res.res.accessToken);
+      dispatch(logIn());
+      navigate("/", { replace: true });
+    });
   };
 
   return (
@@ -68,13 +71,18 @@ const SignIn = ({ goSignup }) => {
                 },
               })}
             />
-            {errors.email && errors.email.type === "required" && <p className={"warning"}>이메일은 필수 입력사항입니다</p>}
-            {errors.email && errors.email.type === "pattern" && <p className={"warning"}>이메일 형식에 맞지 않습니다</p>}
+            {errors.email && errors.email.type === "required" && (
+              <p className={"warning"}>이메일은 필수 입력사항입니다</p>
+            )}
+            {errors.email && errors.email.type === "pattern" && (
+              <p className={"warning"}>이메일 형식에 맞지 않습니다</p>
+            )}
           </StInputWrapper>
           <StInputWrapper>
             <input
               type="password"
               placeholder="****************"
+              autoComplete="off"
               {...register("password", {
                 required: true,
                 minLength: {
@@ -82,14 +90,22 @@ const SignIn = ({ goSignup }) => {
                   message: "8자리 이상 비밀번호를 사용하세요",
                 },
                 pattern: {
-                  value: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
-                  message: "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다",
+                  value:
+                    /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+                  message:
+                    "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다",
                 },
               })}
             />
-            {errors.password && errors.password.type === "required" && <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>}
-            {errors.password && errors.password.type === "minLength" && <p className={"warning"}>{errors.password.message}</p>}
-            {errors.password && errors.password.type === "pattern" && <p className={"warning"}>{errors.password.message}</p>}
+            {errors.password && errors.password.type === "required" && (
+              <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>
+            )}
+            {errors.password && errors.password.type === "minLength" && (
+              <p className={"warning"}>{errors.password.message}</p>
+            )}
+            {errors.password && errors.password.type === "pattern" && (
+              <p className={"warning"}>{errors.password.message}</p>
+            )}
           </StInputWrapper>
           <StButtonWrapper>
             <StButton type="submit" disabled={isSubmitting}>
@@ -163,7 +179,7 @@ const StButton = styled.button`
   margin: 1rem 0;
   padding: 1.5rem;
   border: none;
-  font-size: 18px;
+  font-size: 1.8rem;
   background-color: #ff7e36;
   color: #ffffff;
   border-radius: 10px;
@@ -183,7 +199,7 @@ const StSignupButton = styled.button`
 
   & span {
     font-weight: bold;
-    margin-left: 10px;
+    margin-left: 1rem;
     font-size: 1.8rem;
     color: #ff7e36;
   }

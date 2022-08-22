@@ -8,7 +8,7 @@ const Login = () => {
   useEffect(()=> {
     loginPage = document.querySelector(".SignInWrapper")
     signUpPage = document.querySelector(".SignUpWrapper")
-  })
+  },[])
 
   const goSignup = () => {
     loginPage.classList.toggle("active")

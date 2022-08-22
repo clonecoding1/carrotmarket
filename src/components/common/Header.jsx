@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import { IoIosArrowDown, IoIosArrowBack } from "react-icons/io";
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../../redux/modules/tokenSlice";
 
 const Header = () => {
   const nav = useNavigate();
   const pathname = useLocation().pathname;
-  const [login, setLogin] = useState(false);
+  const dispatch = useDispatch();
+  const { isLogin } = useSelector((state) => state.tokenSlice);
 
   const pathnameByTitle = {
     "/login": "로그인",
@@ -17,7 +19,7 @@ const Header = () => {
     <StHeader>
       {pathname === "/" && (
         <>
-          {login ? (
+          {isLogin ? (
             <UserLocationInfo className="fcc">
               수도권
               <IoIosArrowDown style={{ marginLeft: ".2rem" }} />
@@ -27,20 +29,27 @@ const Header = () => {
               onClick={() => {
                 nav("/");
               }}
-              src={process.env.REACT_APP_IMGURL + "mentLogo.png?alt=media&token=7fad5613-8280-4dc3-9779-6e791b924fe9"}
+              src={
+                process.env.REACT_APP_IMGURL +
+                "mentLogo.png?alt=media&token=7fad5613-8280-4dc3-9779-6e791b924fe9"
+              }
             />
           )}
           <SearchInput type="search" placeholder="검색창" />
           <Btn
             onClick={
-              login
-                ? null
+              isLogin
+                ? () => {
+                    alert("로그아웃 하셨습니다.");
+                    dispatch(logOut());
+                    nav("/");
+                  }
                 : () => {
                     nav("/login");
                   }
             }
           >
-            Log{login ? "out" : "in"}
+            Log{isLogin ? "out" : "in"}
           </Btn>
         </>
       )}
@@ -69,7 +78,7 @@ const Header = () => {
 export default Header;
 
 const StHeader = styled.header`
-  height: 8rem;
+  min-height: 8rem;
   padding: 0 2rem;
   display: flex;
   justify-content: space-between;
@@ -111,9 +120,11 @@ const SearchInput = styled.input`
   background: #dadada;
   border: 0;
   border-radius: 0.5rem;
+
   &:focus {
     outline: 2px solid rgb(255, 138, 61);
   }
+
   &::-webkit-search-decoration,
   &::-webkit-search-cancel-button,
   &::-webkit-search-results-button,
@@ -121,7 +132,8 @@ const SearchInput = styled.input`
     -webkit-appearance: none;
     width: 1rem;
     height: 1rem;
-    background: url("https://cdn-icons-png.flaticon.com/512/70/70287.png") center center no-repeat;
+    background: url("https://cdn-icons-png.flaticon.com/512/70/70287.png")
+      center center no-repeat;
     background-size: 1rem;
     cursor: pointer;
   }

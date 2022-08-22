@@ -1,4 +1,5 @@
 import axios from "axios";
+import {getCookie} from "../utils/cookie";
 
 const instance = axios.create({
   baseURL: "http://localhost:5000",
@@ -8,7 +9,7 @@ const instance = axios.create({
   timeout: 2000,
 });
 instance.interceptors.request.use((config) => {
-  // console.log(config);
+  config.headers["Authorization"] = "Bearer " + getCookie("token")
   return config;
 });
 
