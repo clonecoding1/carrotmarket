@@ -17,11 +17,10 @@ const Detail = () => {
   useEffect(() => {
     getPostOne(postId).then((answer) => {
       if (answer.result) {
-        getTimeString(answer.post.createdAt * 1000);
         const postData = {
           ...answer.post,
           img: answer.post.img.split(","),
-          createdAt: getTimeString(answer.post.createdAt * 1000),
+          createdAt: getTimeString(answer.post.createdAt),
         };
         setPost(postData);
         setTimeout(setLoading(false), 1000);
@@ -91,7 +90,9 @@ const Detail = () => {
           </div>
         </UserInfo>
         <PostInfo>
-          <div>{post.title}</div>
+          <div>
+            {post.title} {post.price}원
+          </div>
           <div>
             {post.createdAt} · 관심 {post.likeCount}
           </div>
