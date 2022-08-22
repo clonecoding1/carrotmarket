@@ -3,11 +3,10 @@ import axios from "../axios/axios";
 export const postLogin = async (data) => {
   const answer = { result: null };
   try {
-    const res = await axios.post("/login", data);
+    const res = await axios.post("/api/user/login", data);
     answer.res = res.data;
     answer.result = true;
   } catch (err) {
-    console.log(err);
     answer.result = false;
   }
   return answer;
@@ -16,7 +15,7 @@ export const postLogin = async (data) => {
 export const postSignup = async (data) => {
   const answer = { result: null };
   try {
-    const res = await axios.post("/signup", data);
+    const res = await axios.post("/api/user/signup", data);
     answer.res = res.data;
     answer.result = true;
   } catch (err) {
@@ -35,13 +34,14 @@ export const dupEmail = async (data) => {
     console.log(err);
     answer.result = false;
   }
+  return answer;
 };
 
-export const dupNickname = (data) => {
+export const dupNickname = async (data) => {
   const answer = { result: null };
   try {
-    axios.post("/api/user/checknickname", data);
-    axios.post("/api/user/checknickname2", data);
+    const res = await axios.post("/api/user/checknickname", data);
+    answer.res = res.data;
     answer.result = true;
   } catch (err) {
     console.log(err);
