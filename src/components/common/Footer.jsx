@@ -1,49 +1,55 @@
 import styled from "styled-components";
-import {RiHome2Fill, RiHome2Line} from "react-icons/ri";
-import {IoPerson, IoPersonOutline, IoChatbubblesSharp, IoChatbubblesOutline} from "react-icons/io5";
-import {useState} from "react";
+import { RiHome2Fill, RiHome2Line } from "react-icons/ri";
+import {
+  IoPerson,
+  IoPersonOutline,
+  IoChatbubblesSharp,
+  IoChatbubblesOutline,
+} from "react-icons/io5";
+import { useState } from "react";
 
-import {useLocation, useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 
 const Footer = () => {
   const nav = useNavigate();
-  const [login, setLogin] = useState(false);
-  const {isLogin, userToken} = useSelector((state) => state.tokenSlice)
+  const { isLogin } = useSelector((state) => state.tokenSlice);
   const pathname = useLocation().pathname;
 
   const alerts = () => {
-    Swal.fire({icon: "error", text: "로그인 후 이용해주세요"}).then((res) => {
-      nav("/", {replace: true});
+    Swal.fire({ icon: "error", text: "로그인 후 이용해주세요" }).then((res) => {
+      nav("/", { replace: true });
     });
   };
-  
-
 
   return (
     <StFooter>
       <FooterNav>
-        <li onClick={() => {
-          nav("/")
-        }}>
-          {pathname === "/" ? <RiHome2Fill/> : <RiHome2Line/>}
+        <li
+          onClick={() => {
+            nav("/");
+          }}
+        >
+          {pathname === "/" ? <RiHome2Fill /> : <RiHome2Line />}
           <p>홈</p>
         </li>
-        <li>
-          <IoChatbubblesOutline/>
+        <li onClick={() => nav("/write")}>
+          <IoChatbubblesOutline />
           <p>채팅</p>
         </li>
-        <li onClick={
-          isLogin
-            ? () => {
-              nav("/mypage")
-            }
-            : () => {
-              alerts()
-            }
-        }>
-          {pathname === "/mypage" ? <IoPerson/> : <IoPersonOutline/>}
+        <li
+          onClick={
+            isLogin
+              ? () => {
+                  nav("/mypage");
+                }
+              : () => {
+                  alerts();
+                }
+          }
+        >
+          {pathname === "/mypage" ? <IoPerson /> : <IoPersonOutline />}
           <p>나의 당근</p>
         </li>
       </FooterNav>
