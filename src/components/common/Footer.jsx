@@ -12,11 +12,11 @@ const Footer = () => {
   return (
     <StFooter>
       <FooterNav>
-        <li>
+        <li onClick={() => nav("/")}>
           {pathname === "/" ? <RiHome2Fill /> : <RiHome2Line />}
           <p>홈</p>
         </li>
-        <li>
+        <li onClick={() => nav("/write")}>
           <IoChatbubblesOutline />
           <p>채팅</p>
         </li>

@@ -168,7 +168,9 @@ const Signup = ({ goSignin }) => {
                 validate: (value) => value === password.current,
               })}
             />
-            {errors.confirmPassword && errors.confirmPassword.type === "required" && <p className={"warning"}>재확인 비밀번호는 필수 입력사항 입니다.</p>}
+            {errors.confirmPassword && errors.confirmPassword.type === "required" && (
+              <p className={"warning"}>재확인 비밀번호는 필수 입력사항 입니다.</p>
+            )}
             {errors.confirmPassword && errors.confirmPassword.type === "validate" && <p className={"warning"}>비밀번호가 일치하지 않습니다.</p>}
           </StInputWrapper>
           <StInputWrapper>
