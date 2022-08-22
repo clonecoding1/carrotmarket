@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
 import { postLogin } from "../../api/loginAPI";
 import { setCookie } from "../../utils/cookie";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +11,7 @@ import { logIn } from "../../redux/modules/tokenSlice";
 const SignIn = ({ goSignup }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { Kakao } = window;
   const {
     register,
     watch,
@@ -32,6 +32,9 @@ const SignIn = ({ goSignup }) => {
       }
     );
   };
+  const cannotLogin = () => {
+    Swal.fire({ icon: "error", text: "로그인에 실패하였습니다" });
+  };
 
   useEffect(() => {
     if (userToken !== null) {
@@ -42,9 +45,30 @@ const SignIn = ({ goSignup }) => {
 
   const onSubmit = (data) => {
     postLogin(data).then((res) => {
-      setCookie("token", res.res.accessToken);
-      dispatch(logIn());
-      navigate("/", { replace: true });
+      if (res.result) {
+        setCookie("token", res.res);
+        dispatch(logIn());
+        navigate("/", { replace: true });
+      } else {
+        cannotLogin();
+      }
+    });
+  };
+
+  const onKakaoLoginHandler = () => {
+    Kakao.Auth.login({
+      success: (authObj) => {
+        fetch(`cd45fb1f4304e84a2ef625f48b525d77`, {
+          method: "POST",
+          body: JSON.stringify({
+            access_token: authObj.access_token,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res);
+          });
+      },
     });
   };
 
@@ -108,6 +132,9 @@ const SignIn = ({ goSignup }) => {
             )}
           </StInputWrapper>
           <StButtonWrapper>
+            <StButton type="button" onClick={onKakaoLoginHandler}>
+              KaKao 로그인
+            </StButton>
             <StButton type="submit" disabled={isSubmitting}>
               로그인
             </StButton>
@@ -172,35 +199,47 @@ const StInputWrapper = styled.div`
 const StButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  margin-top: 2rem;
 `;
 
 const StButton = styled.button`
-  width: 35%;
+  width: 50%;
   margin: 1rem 0;
   padding: 1.5rem;
   border: none;
   font-size: 1.8rem;
-  background-color: #ff7e36;
+  background-color: #fda473;
   color: #ffffff;
   border-radius: 10px;
+  background-image: url("https://download-hub.com/wp-content/uploads/2021/02/Daangn.png");
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: left 10% center;
+
+  &[type="button"] {
+    margin-right: 1rem;
+    background-image: url("https://online.spartacodingclub.kr/static/media/ic_kko.e96d6941.svg");
+    color: black;
+    background-color: #ffe500;
+  }
 `;
 
 const StSignupButton = styled.button`
   border-radius: 1rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
   margin-bottom: 1rem;
   padding: 2rem;
   width: 100%;
-  background-color: #ffd9c4;
+  background-color: #fda473;
   border: none;
   text-align: center;
   font-size: 1.6rem;
-  color: #ff965d;
+  color: white;
 
   & span {
     font-weight: bold;
     margin-left: 1rem;
     font-size: 1.8rem;
-    color: #ff7e36;
+    color: white;
   }
 `;

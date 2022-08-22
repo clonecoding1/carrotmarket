@@ -12,8 +12,8 @@ const Signup = ({ goSignin }) => {
     handleSubmit,
     formState: { isSubmitting, errors },
   } = useForm();
-  const [dupEmail, setDupEmail] = useState(false);
-  const [dupNickname, setDupNickname] = useState(false);
+  const [dupEmailText, setDupEmailText] = useState(false);
+  const [dupNicknameText, setDupNicknameText] = useState(false);
   const [profile, setProfile] = useState("https://www.daangn.com/logo.png");
   const email = useRef();
   const password = useRef();
@@ -27,55 +27,49 @@ const Signup = ({ goSignin }) => {
   };
 
   const onSubmit = (data, e) => {
-    // if (dupEmail === false || dupNickname === false) {
-    //   swalert("error", "중복검사를 다시 확인해주세요")
-    //   return
-    // }
-    postSignup({ ...data, profile })
-      .then((res) => {
-        swalert("success", "회원가입 되었습니다.");
-        goSignin();
-        e.target.reset();
-      })
-      .catch((rej) => {
-        if (rej.response.status === 401) {
-          return swalert("error", "이미 로그인 되어 있습니다.");
-        } else if (rej.response.status === 400) {
-          return swalert("error", "서버 맛탱이 간듯 다시해보셈.");
-        }
-      });
+    if (dupEmailText === false) {
+      swalert("error", "이메일 중복검사를 다시 확인해주세요");
+      return;
+    }
+    if (dupNicknameText === false) {
+      swalert("error", "닉네임 중복검사를 다시 확인해주세요");
+      return;
+    }
+    postSignup({ ...data, profile }).then((res) => {
+      swalert("success", "회원가입이 완료되었습니다.");
+      goSignin();
+      e.target.reset();
+    });
   };
 
   const onDupEmail = () => {
-    try {
-      // axios.post("http://localhost:4000/api/user/checkemail",email.current)
-      dupEmail(email.current)
-        .then((res) => {
-          setDupEmail(true);
-          swalert("success", "사용가능한 이메일입니다.");
-        })
-        .catch((rej) => {
-          console.log(rej);
-        });
-    } catch (err) {
-      console.log(err);
+    const regex = /\S+@\S+\.\S+/;
+    if (regex.test(email.current)) {
+      dupEmail({ email: email.current }).then((res) => {
+        if (res.result) {
+          setDupEmailText(true);
+          swalert("success", "사용 가능한 이메일입니다.");
+        } else {
+          swalert("error", "사용 불가능한 이메일입니다.");
+        }
+      });
+    } else {
+      swalert("error", "이메일 형식에 맞지 않습니다.");
     }
   };
 
   const onDupNickname = () => {
-    try {
-      // axios.post("http://localhost:4000/api/user/checknickname",nickname.current)
-      dupNickname(nickname.current)
-        .then((res) => {
-          setDupNickname(true);
-          swalert("success", "사용가능한 닉네임입니다.");
-          console.log(res);
-        })
-        .catch((rej) => {
-          console.log(rej);
-        });
-    } catch (err) {
-      console.log(err);
+    if (nickname.current.length < 2 || nickname.current.length > 10) {
+      swalert("error", "닉네임은 2자리 이상 10자리 이하로 입력해주세요.");
+    } else {
+      dupNickname({ nickname: nickname.current }).then((res) => {
+        if (res.result) {
+          setDupNicknameText(true);
+          swalert("success", "사용 가능한 닉네임입니다.");
+        } else {
+          swalert("error", "사용 불가능한 닉네임입니다.");
+        }
+      });
     }
   };
 
@@ -92,7 +86,7 @@ const Signup = ({ goSignin }) => {
           <StInputWrapper>
             <input
               onChange={() => {
-                setDupEmail(false);
+                setDupEmailText(false);
               }}
               ref={email}
               type="text"
@@ -119,7 +113,7 @@ const Signup = ({ goSignin }) => {
           <StInputWrapper>
             <input
               onChange={() => {
-                setDupNickname(false);
+                setDupNicknameText(false);
               }}
               ref={nickname}
               type="text"
