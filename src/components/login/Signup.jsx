@@ -97,6 +97,7 @@ const Signup = ({ goSignin }) => {
               ref={email}
               type="text"
               placeholder="test@email.com"
+              autoComplete="off"
               {...register("email", {
                 required: true,
                 pattern: {
@@ -108,8 +109,12 @@ const Signup = ({ goSignin }) => {
             <button onClick={onDupEmail} type={"button"}>
               중복체크
             </button>
-            {errors.email && errors.email.type === "required" && <p className={"warning"}>이메일은 필수 입력사항입니다</p>}
-            {errors.email && errors.email.type === "pattern" && <p className={"warning"}>이메일 형식에 맞지 않습니다</p>}
+            {errors.email && errors.email.type === "required" && (
+              <p className={"warning"}>이메일은 필수 입력사항입니다</p>
+            )}
+            {errors.email && errors.email.type === "pattern" && (
+              <p className={"warning"}>이메일 형식에 맞지 않습니다</p>
+            )}
           </StInputWrapper>
           <StInputWrapper>
             <input
@@ -119,6 +124,7 @@ const Signup = ({ goSignin }) => {
               ref={nickname}
               type="text"
               placeholder="닉네임"
+              autoComplete="off"
               {...register("nickname", {
                 required: true,
                 minLength: {
@@ -134,15 +140,22 @@ const Signup = ({ goSignin }) => {
             <button onClick={onDupNickname} type={"button"}>
               중복체크
             </button>
-            {errors.nickname && errors.nickname.type === "required" && <p className={"warning"}>닉네임은 필수 입력사항 입니다.</p>}
-            {errors.nickname && errors.nickname.type === "minLength" && <p className={"warning"}>{errors.nickname.message}</p>}
-            {errors.nickname && errors.nickname.type === "maxLength" && <p className={"warning"}>{errors.nickname.message}</p>}
+            {errors.nickname && errors.nickname.type === "required" && (
+              <p className={"warning"}>닉네임은 필수 입력사항 입니다.</p>
+            )}
+            {errors.nickname && errors.nickname.type === "minLength" && (
+              <p className={"warning"}>{errors.nickname.message}</p>
+            )}
+            {errors.nickname && errors.nickname.type === "maxLength" && (
+              <p className={"warning"}>{errors.nickname.message}</p>
+            )}
           </StInputWrapper>
           <StInputWrapper>
             <input
               ref={password}
               type="password"
               placeholder="비밀번호"
+              autoComplete="off"
               {...register("password", {
                 required: true,
                 minLength: {
@@ -150,28 +163,43 @@ const Signup = ({ goSignin }) => {
                   message: "8자리 이상 비밀번호를 사용하세요",
                 },
                 pattern: {
-                  value: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
-                  message: "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다",
+                  value:
+                    /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+                  message:
+                    "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다",
                 },
               })}
             />
-            {errors.password && errors.password.type === "required" && <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>}
-            {errors.password && errors.password.type === "minLength" && <p className={"warning"}>{errors.password.message}</p>}
-            {errors.password && errors.password.type === "pattern" && <p className={"warning"}>{errors.password.message}</p>}
+            {errors.password && errors.password.type === "required" && (
+              <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>
+            )}
+            {errors.password && errors.password.type === "minLength" && (
+              <p className={"warning"}>{errors.password.message}</p>
+            )}
+            {errors.password && errors.password.type === "pattern" && (
+              <p className={"warning"}>{errors.password.message}</p>
+            )}
           </StInputWrapper>
           <StInputWrapper>
             <input
               type="password"
               placeholder="비밀번호 재확인"
+              autoComplete="off"
               {...register("confirmPassword", {
                 required: true,
                 validate: (value) => value === password.current,
               })}
             />
-            {errors.confirmPassword && errors.confirmPassword.type === "required" && (
-              <p className={"warning"}>재확인 비밀번호는 필수 입력사항 입니다.</p>
-            )}
-            {errors.confirmPassword && errors.confirmPassword.type === "validate" && <p className={"warning"}>비밀번호가 일치하지 않습니다.</p>}
+            {errors.confirmPassword &&
+              errors.confirmPassword.type === "required" && (
+                <p className={"warning"}>
+                  재확인 비밀번호는 필수 입력사항 입니다.
+                </p>
+              )}
+            {errors.confirmPassword &&
+              errors.confirmPassword.type === "validate" && (
+                <p className={"warning"}>비밀번호가 일치하지 않습니다.</p>
+              )}
           </StInputWrapper>
           <StInputWrapper>
             <select {...register("location")}>
@@ -206,7 +234,7 @@ const StSignup = styled.div`
   }
 
   & p {
-    font-size: 16px;
+    font-size: 1.6rem;
   }
 
   & form {
@@ -229,7 +257,7 @@ const StInputWrapper = styled.div`
   }
 
   & button {
-    width: 100px;
+    width: 10rem;
     margin-left: 1rem;
     height: 5.1rem;
     border-radius: 10px;
