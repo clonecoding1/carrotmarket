@@ -9,3 +9,7 @@ export const test2 = () => {
     confirmButtonText: "스펀지밥",
   });
 };
+
+export const successAlert = () => {
+  return Swal.fire({ icon: "success", title: "글쓰기 성공", confirmButtonText: "홈으로 이동" });
+};
