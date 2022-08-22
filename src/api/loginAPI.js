@@ -12,10 +12,12 @@ export const dupNickname = (data) => {
   const answer = { result: null };
   try {
     axios.post("/api/user/checknickname", data);
+    axios.post("/api/user/checknickname2", data);
     answer.result = true;
   } catch (err) {
     console.log(err);
     answer.result = false;
   }
+
   return answer;
 };
