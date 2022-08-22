@@ -19,6 +19,12 @@ import { successAlert } from "../utils/swal";
 
 const Write = () => {
   const nav = useNavigate();
+  const moveRef = useRef(null);
+  useEffect(() => {
+    moveRef.current.style.left = 0;
+    moveRef.current.style.opacity = 1;
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -75,7 +81,7 @@ const Write = () => {
   };
 
   // 가격 콤마찍기 + type:number안쓰고 처리하기
-  const krwRef = useRef();
+  const krwRef = useRef(null);
   const priceComma = (e) => {
     const target = e.target;
     // 첫번째 정규식 : 숫자 거르기, 두번째 정규식 : 콤마 붙이기
@@ -113,7 +119,7 @@ const Write = () => {
   };
 
   // required alert 처리
-  const modalRef = useRef();
+  const modalRef = useRef(null);
   const [modalToggle, setModalToggle] = useState();
   const errorsCheck = Object.keys(errors);
   useEffect(() => {
@@ -161,7 +167,7 @@ const Write = () => {
   };
 
   return (
-    <WriteForm className="fcc" onSubmit={handleSubmit(checkSubmit)}>
+    <WriteForm className="fcc" onSubmit={handleSubmit(checkSubmit)} ref={moveRef}>
       <FormFileArea>
         <FileLabel htmlFor="imgFile" className="fcc">
           <AiFillCamera />
@@ -190,7 +196,7 @@ const Write = () => {
         <FormInput autoComplete="off" maxLength="12" placeholder="가격" {...register("price", priceOpt)} />
       </div>
       <FormTextArea
-        maxLength="336"
+        maxLength="335"
         placeholder="올릴 게시글 내용을 작성해주세요. 가품 및 판매금지 품목은 게시가 제한될 수 있어요."
         {...register("content", contentOpt)}
       />
@@ -203,9 +209,12 @@ const Write = () => {
 const WriteForm = styled.form`
   position: relative;
   overflow: hidden;
+  left: 10rem;
+  opacity: 0;
   height: 100%;
   padding: 2rem;
   flex-flow: column;
+  transition-duration: 0.7s;
   & > * {
     width: 100%;
   }
