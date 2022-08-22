@@ -2,11 +2,13 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { getUserInfo } from "../redux/modules/tokenSlice";
+import { getUserInfo, logOut } from "../redux/modules/tokenSlice";
 import axios from "../axios/axios";
 import { SiInstacart } from "react-icons/si";
 import { AiOutlineHeart, AiTwotoneHeart } from "react-icons/ai";
 import Swal from "sweetalert2";
+import { deleteUser } from "../api/mypageAPI";
+import { getUser } from "./../api/mypageAPI";
 
 const Mypage = () => {
   const navigate = useNavigate();
@@ -23,6 +25,28 @@ const Mypage = () => {
     });
   };
 
+  const realAlert = () => {
+    Swal.fire({
+      title: "회원탈퇴 하시겠습니까?",
+      text: "한번 탈퇴하면 영원히 재가입 불가능합니다",
+      icon: "warning",
+      showDenyButton: true,
+      confirmButtonText: "탈퇴",
+      denyButtonText: `취소`,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        Swal.fire("회원 탈퇴 되었습니다", "", "success").then((res) => {
+          deleteUser().then(() => {
+            navigate("/");
+            dispatch(logOut());
+          });
+        });
+      } else {
+        Swal.fire("회원 탈퇴가 취소 되었습니다", "", "error");
+      }
+    });
+  };
+
   useEffect(() => {
     if (isLogin === false) {
       alerts();
@@ -33,15 +57,14 @@ const Mypage = () => {
   }, []);
 
   useEffect(() => {
-    const getUser = async () => {
-      const data = await axios.get(`http://localhost:5000/users?id=19`);
-      setUserInfo(data.data[0].user);
-      setUserLikeList(data.data[0].likeList);
-    };
-    getUser();
+    getUser().then((res) => {
+      console.log(res);
+    });
   }, []);
 
-  // console.log(userInformation.likeList)
+  const onDeleteHandler = () => {
+    realAlert();
+  };
 
   return (
     <StMypage>
@@ -50,6 +73,9 @@ const Mypage = () => {
         <div className="textWrapper">
           <p className={"nickname"}>{userInfo.nickname}</p>
           <p>{userInfo.location}</p>
+        </div>
+        <div className="widthdrawal">
+          <button onClick={onDeleteHandler}>회원 탈퇴</button>
         </div>
       </div>
       <div className="notice">
@@ -114,6 +140,7 @@ const StMypage = styled.div`
     font-size: 1.6rem;
     display: flex;
     align-items: center;
+    padding: 0 2rem;
 
     img {
       width: 10rem;
@@ -125,6 +152,7 @@ const StMypage = styled.div`
 
     & .textWrapper {
       margin-left: 2rem;
+      flex: 1;
 
       & .nickname {
         font-weight: 700;
@@ -133,6 +161,15 @@ const StMypage = styled.div`
 
       & p:first-child {
         margin-bottom: 1rem;
+      }
+    }
+
+    & .widthdrawal {
+      & button {
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        border: none;
+        border: 1px solid #ccc;
       }
     }
   }
