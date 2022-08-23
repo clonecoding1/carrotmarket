@@ -148,6 +148,7 @@ const CustomCarouse = styled(Carousel)`
 `;
 
 const PostImg = styled.div`
+  cursor: pointer;
   width: 60rem;
   height: 35rem;
   background: url(${(props) => (props["data-url"] ? process.env.REACT_APP_IMGURL + props["data-url"] : null)});
