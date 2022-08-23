@@ -25,7 +25,11 @@ const Home = () => {
     <div style={{ position: "relative", height: "100%" }}>
       <label>
         페이지 당 표시할 게시물 수:&nbsp;
-        <select type="number" value={limit} onChange={({ target: { value } }) => setLimit(Number(value))}>
+        <select
+          type="number"
+          value={limit}
+          onChange={({ target: { value } }) => setLimit(Number(value))}
+        >
           <option value="4">4</option>
           <option value="8">8</option>
           <option value="12">12</option>
@@ -41,7 +45,9 @@ const Home = () => {
               <StComment>
                 <span className="title">{post.title}</span>
                 <span className="nickname">{post.nickname}</span>
-                <span className="price">{Number(post.price).toLocaleString()}원</span>
+                <span className="price">
+                  {Number(post.price).toLocaleString()}원
+                </span>
                 <span className="location">{post.location}</span>
                 {/* <span style={{ textAlign: "right" }}>♡{post.likeCount}</span> */}
                 <div style={{ textAlign: "right" }}>
@@ -54,7 +60,12 @@ const Home = () => {
         })}
       </StContainer>
       <footer>
-        <Pagination total={postList.length} limit={limit} page={page} setPage={setPage} />
+        <Pagination
+          total={postList.length}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
       </footer>
       <AddBtn
         className="fcc"
