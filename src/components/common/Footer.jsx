@@ -1,11 +1,6 @@
 import styled from "styled-components";
 import { RiHome2Fill, RiHome2Line } from "react-icons/ri";
-import {
-  IoPerson,
-  IoPersonOutline,
-  IoChatbubblesSharp,
-  IoChatbubblesOutline,
-} from "react-icons/io5";
+import { IoPerson, IoPersonOutline, IoChatbubblesSharp, IoChatbubblesOutline } from "react-icons/io5";
 import { useState } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -34,8 +29,8 @@ const Footer = () => {
           {pathname === "/" ? <RiHome2Fill /> : <RiHome2Line />}
           <p>홈</p>
         </li>
-        <li onClick={() => nav("/write")}>
-          <IoChatbubblesOutline />
+        <li onClick={() => nav("/chatList")}>
+          {pathname === "/chatList" ? <IoChatbubblesSharp /> : <IoChatbubblesOutline />}
           <p>채팅</p>
         </li>
         <li

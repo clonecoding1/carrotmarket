@@ -7992,6 +7992,11 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-polling@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/react-polling/-/react-polling-1.0.9.tgz#f1101a1d88bd90a647ace969b6731ab19326029b"
+  integrity sha512-fXRQMbpfp5B8tOjq/JzqsP0V8DcgDbb/piwlnTMHJUgepgyyVPNGqtT0TmaJTIsyS+ujkNWOyjGtjewMoNmdYg==
+
 react-redux@^8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-8.0.2.tgz#bc2a304bb21e79c6808e3e47c50fe1caf62f7aad"
