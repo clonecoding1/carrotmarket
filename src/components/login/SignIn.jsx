@@ -16,6 +16,7 @@ const SignIn = ({ goSignup }) => {
     register,
     watch,
     handleSubmit,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm();
   const email = useRef();
@@ -32,8 +33,9 @@ const SignIn = ({ goSignup }) => {
       }
     );
   };
-  const cannotLogin = () => {
-    Swal.fire({ icon: "error", text: "로그인에 실패하였습니다" });
+
+  const cannotLogin = (text) => {
+    Swal.fire({ icon: "error", text: text });
   };
 
   useEffect(() => {
@@ -50,9 +52,13 @@ const SignIn = ({ goSignup }) => {
         dispatch(logIn());
         navigate("/", { replace: true });
       } else {
-        cannotLogin();
+        cannotLogin(res.res.data);
       }
     });
+  };
+
+  const onResetHandler = (e) => {
+    e.target.reset();
   };
 
   return (
@@ -124,12 +130,18 @@ const SignIn = ({ goSignup }) => {
               로그인
             </StButton>
           </StButtonWrapper>
+          <div className={"buttonWrapper"}>
+            <StSignupButton
+              type="button"
+              onClick={() => {
+                reset();
+                goSignup();
+              }}
+            >
+              계정이 없으신가요? <span>회원가입</span>
+            </StSignupButton>
+          </div>
         </form>
-      </div>
-      <div className={"buttonWrapper"}>
-        <StSignupButton onClick={goSignup}>
-          계정이 없으신가요? <span>회원가입</span>
-        </StSignupButton>
       </div>
     </StSignIn>
   );
