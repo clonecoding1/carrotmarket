@@ -7,8 +7,7 @@ import axios from "../axios/axios";
 import { SiInstacart } from "react-icons/si";
 import { AiOutlineHeart, AiTwotoneHeart } from "react-icons/ai";
 import Swal from "sweetalert2";
-import { deleteUser } from "../api/mypageAPI";
-import { getUser } from "./../api/mypageAPI";
+import { deleteUser, getLikeList, getUser, getMyList } from "../api/mypageAPI";
 
 const Mypage = () => {
   const navigate = useNavigate();
@@ -16,7 +15,35 @@ const Mypage = () => {
   const zzim = useRef();
   const sell = useRef();
   const [userInfo, setUserInfo] = useState({});
-  const [userLikeList, setUserLikeList] = useState([]);
+  const [list, setList] = useState([]);
+
+  const onZzimHandler = () => {
+    zzim.current.className = "icons active";
+    sell.current.className = "icons";
+    getLikeList().then((res) => {
+      if (res.result) {
+        const likeList = [];
+        for (let i = 0; i < res.res.length; i++) {
+          likeList.push(...Object.values(res.res[i]));
+          setList(likeList);
+        }
+      }
+    });
+  };
+
+  const onSellHandler = () => {
+    zzim.current.className = "icons";
+    sell.current.className = "icons active";
+    getMyList().then((res) => {
+      if (res.result) {
+        const likeList = [];
+        for (let i = 0; i < res.res.length; i++) {
+          likeList.push(...Object.values(res.res[i]));
+          setList(likeList);
+        }
+      }
+    });
+  };
 
   const realAlert = () => {
     Swal.fire({
@@ -46,7 +73,24 @@ const Mypage = () => {
 
   useEffect(() => {
     getUser().then((res) => {
-      console.log(res);
+      if (res.result) {
+        setUserInfo(res.res.user);
+      } else {
+        Swal.fire("회원 정보 불러오기에 실패하였습니다", "", "error");
+      }
+    });
+  }, []);
+
+  //최초 좋아요 목록 가져오기
+  useEffect(() => {
+    getLikeList().then((res) => {
+      if (res.result) {
+        const likeList = [];
+        for (let i = 0; i < res.res.length; i++) {
+          likeList.push(...Object.values(res.res[i]));
+          setList(likeList);
+        }
+      }
     });
   }, []);
 
@@ -75,14 +119,14 @@ const Mypage = () => {
       </div>
       <div className="tap">
         <ul>
-          <li>
-            <div className="icons">
-              <AiTwotoneHeart className={"active"} />
+          <li onClick={onZzimHandler}>
+            <div ref={zzim} className="icons active">
+              <AiTwotoneHeart />
             </div>
             <p>찜한 목록</p>
           </li>
-          <li>
-            <div className="icons">
+          <li onClick={onSellHandler}>
+            <div ref={sell} className="icons">
               <SiInstacart />
             </div>
             <p>판매 내역</p>
@@ -91,15 +135,21 @@ const Mypage = () => {
       </div>
       <div className="listList">
         <ul>
-          {userLikeList.map((data) => (
-            <li key={data.postId}>
+          {list.length === 0 && <li className="empty">아직 목록이 없어요.</li>}
+          {list.map((data) => (
+            <li
+              key={data.postId}
+              onClick={() => {
+                navigate(`/detail/${data.postId}`);
+              }}
+            >
               <div className="left">
-                <img src={data.img} alt="" />
+                <img src={process.env.REACT_APP_IMGURL + data.img} alt="" />
               </div>
               <div className="center">
                 <div className="title">{data.title}</div>
                 <div className="location">{data.location}</div>
-                <div className="price">{data.price.toLocaleString()}원</div>
+                <div className="price">{data.price}원</div>
               </div>
               <div className="right">
                 <div className="heart">
@@ -122,6 +172,9 @@ export default Mypage;
 
 const StMypage = styled.div`
   font-size: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   & .header {
     margin: 2rem 0;
@@ -157,7 +210,6 @@ const StMypage = styled.div`
         padding: 1rem 2rem;
         border-radius: 10px;
         border: none;
-        border: 1px solid #ccc;
       }
     }
   }
@@ -189,6 +241,7 @@ const StMypage = styled.div`
     & ul {
       display: flex;
       justify-content: center;
+      border-top: 0.5rem solid #eee;
       border-bottom: 0.5rem solid #eee;
 
       & li {
@@ -199,6 +252,18 @@ const StMypage = styled.div`
         flex-direction: column;
         align-items: center;
         cursor: pointer;
+        position: relative;
+
+        &:first-child::before {
+          position: absolute;
+          content: "";
+          display: block;
+          width: 3px;
+          height: 100%;
+          background-color: #eee;
+          top: 0;
+          right: 0;
+        }
 
         & .icons {
           width: 50px;
@@ -210,15 +275,15 @@ const StMypage = styled.div`
           align-items: center;
           justify-content: center;
 
+          &.active svg {
+            color: rgb(255, 138, 61);
+          }
+
           & svg {
             width: 50%;
             height: 50%;
             vertical-align: center;
             color: #ccc;
-
-            &.active {
-              color: rgb(255, 138, 61);
-            }
           }
         }
 
@@ -233,15 +298,36 @@ const StMypage = styled.div`
 
   & .listList {
     padding: 1rem 0;
+    flex: 1;
 
     & ul {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      & .empty {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #aaa;
+      }
+
       & li {
         display: flex;
         padding: 2rem 1rem;
-        box-shadow: 0 0.3rem 0.3rem -0.3rem;
+        border-bottom: 1px solid #ccc;
+        cursor: pointer;
 
         &:last-child {
           box-shadow: none;
+          border: none;
+        }
+
+        &:hover {
+          & p {
+            font-weight: bold;
+          }
         }
       }
     }
@@ -294,6 +380,7 @@ const StMypage = styled.div`
 
         & svg {
           margin-top: 2px;
+          margin-right: 3px;
         }
       }
     }

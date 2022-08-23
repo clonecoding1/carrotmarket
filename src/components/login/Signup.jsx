@@ -10,6 +10,7 @@ const Signup = ({ goSignin }) => {
     register,
     watch,
     handleSubmit,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm();
   const [dupEmailText, setDupEmailText] = useState(false);
@@ -28,7 +29,7 @@ const Signup = ({ goSignin }) => {
     Swal.fire({ icon, text });
   };
 
-  //서브밋
+  //회원가입
   const onSubmit = (data, e) => {
     if (dupEmailText === false) {
       swalert("error", "이메일 중복검사를 다시 확인해주세요");
@@ -39,9 +40,14 @@ const Signup = ({ goSignin }) => {
       return;
     }
     postSignup({ ...data, profile }).then((res) => {
-      swalert("success", "회원가입이 완료되었습니다.");
-      goSignin();
-      e.target.reset();
+      console.log(res);
+      if (res.result) {
+        swalert("success", "회원가입이 완료되었습니다.");
+        goSignin();
+        e.target.reset();
+      } else {
+        swalert("error", res.res.data);
+      }
     });
   };
 
@@ -69,7 +75,7 @@ const Signup = ({ goSignin }) => {
           setDupEmailCurrent(email.current);
           swalert("success", "사용 가능한 이메일입니다.");
         } else {
-          swalert("error", "사용 불가능한 이메일입니다.");
+          swalert("error", res.res.data);
         }
       });
     } else {
@@ -88,7 +94,7 @@ const Signup = ({ goSignin }) => {
           setDupNicknameCurrent(nickname.current.length);
           swalert("success", "사용 가능한 닉네임입니다.");
         } else {
-          swalert("error", "사용 불가능한 닉네임입니다.");
+          swalert("error", res.res.data);
         }
       });
     }
@@ -124,8 +130,12 @@ const Signup = ({ goSignin }) => {
             <button onClick={onDupEmail} type={"button"}>
               중복체크
             </button>
-            {errors.email && errors.email.type === "required" && <p className={"warning"}>이메일은 필수 입력사항입니다</p>}
-            {errors.email && errors.email.type === "pattern" && <p className={"warning"}>이메일 형식에 맞지 않습니다</p>}
+            {errors.email && errors.email.type === "required" && (
+              <p className={"warning"}>이메일은 필수 입력사항입니다</p>
+            )}
+            {errors.email && errors.email.type === "pattern" && (
+              <p className={"warning"}>이메일 형식에 맞지 않습니다</p>
+            )}
           </StInputWrapper>
           <StInputWrapper>
             <input
@@ -151,9 +161,15 @@ const Signup = ({ goSignin }) => {
             <button onClick={onDupNickname} type={"button"}>
               중복체크
             </button>
-            {errors.nickname && errors.nickname.type === "required" && <p className={"warning"}>닉네임은 필수 입력사항 입니다.</p>}
-            {errors.nickname && errors.nickname.type === "minLength" && <p className={"warning"}>{errors.nickname.message}</p>}
-            {errors.nickname && errors.nickname.type === "maxLength" && <p className={"warning"}>{errors.nickname.message}</p>}
+            {errors.nickname && errors.nickname.type === "required" && (
+              <p className={"warning"}>닉네임은 필수 입력사항 입니다.</p>
+            )}
+            {errors.nickname && errors.nickname.type === "minLength" && (
+              <p className={"warning"}>{errors.nickname.message}</p>
+            )}
+            {errors.nickname && errors.nickname.type === "maxLength" && (
+              <p className={"warning"}>{errors.nickname.message}</p>
+            )}
           </StInputWrapper>
           <StInputWrapper>
             <input
@@ -168,14 +184,22 @@ const Signup = ({ goSignin }) => {
                   message: "8자리 이상 비밀번호를 사용하세요",
                 },
                 pattern: {
-                  value: /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
-                  message: "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다",
+                  value:
+                    /^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/,
+                  message:
+                    "비밀번호는 문자, 숫자, 특수문자 각 1개씩 포함하며 8글자 이상입니다",
                 },
               })}
             />
-            {errors.password && errors.password.type === "required" && <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>}
-            {errors.password && errors.password.type === "minLength" && <p className={"warning"}>{errors.password.message}</p>}
-            {errors.password && errors.password.type === "pattern" && <p className={"warning"}>{errors.password.message}</p>}
+            {errors.password && errors.password.type === "required" && (
+              <p className={"warning"}>비밀번호는 필수 입력사항 입니다</p>
+            )}
+            {errors.password && errors.password.type === "minLength" && (
+              <p className={"warning"}>{errors.password.message}</p>
+            )}
+            {errors.password && errors.password.type === "pattern" && (
+              <p className={"warning"}>{errors.password.message}</p>
+            )}
           </StInputWrapper>
           <StInputWrapper>
             <input
@@ -187,10 +211,16 @@ const Signup = ({ goSignin }) => {
                 validate: (value) => value === password.current,
               })}
             />
-            {errors.confirmPassword && errors.confirmPassword.type === "required" && (
-              <p className={"warning"}>재확인 비밀번호는 필수 입력사항 입니다.</p>
-            )}
-            {errors.confirmPassword && errors.confirmPassword.type === "validate" && <p className={"warning"}>비밀번호가 일치하지 않습니다.</p>}
+            {errors.confirmPassword &&
+              errors.confirmPassword.type === "required" && (
+                <p className={"warning"}>
+                  재확인 비밀번호는 필수 입력사항 입니다.
+                </p>
+              )}
+            {errors.confirmPassword &&
+              errors.confirmPassword.type === "validate" && (
+                <p className={"warning"}>비밀번호가 일치하지 않습니다.</p>
+              )}
           </StInputWrapper>
           <StInputWrapper>
             <select {...register("location")}>
@@ -203,7 +233,13 @@ const Signup = ({ goSignin }) => {
             </select>
           </StInputWrapper>
           <StButtonWrapper>
-            <StGoLoginButton type={"button"} onClick={goSignin}>
+            <StGoLoginButton
+              type={"button"}
+              onClick={() => {
+                reset();
+                goSignin();
+              }}
+            >
               <span>로그인</span>
             </StGoLoginButton>
             <StSignupButton type={"submit"} disabled={isSubmitting}>
