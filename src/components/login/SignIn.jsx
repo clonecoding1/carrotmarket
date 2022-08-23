@@ -7,11 +7,11 @@ import { postLogin } from "../../api/loginAPI";
 import { setCookie } from "../../utils/cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { logIn } from "../../redux/modules/tokenSlice";
+import Kakao from "../../pages/Kakao";
 
 const SignIn = ({ goSignup }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { Kakao } = window;
   const {
     register,
     watch,
@@ -52,23 +52,6 @@ const SignIn = ({ goSignup }) => {
       } else {
         cannotLogin();
       }
-    });
-  };
-
-  const onKakaoLoginHandler = () => {
-    Kakao.Auth.login({
-      success: (authObj) => {
-        fetch(`cd45fb1f4304e84a2ef625f48b525d77`, {
-          method: "POST",
-          body: JSON.stringify({
-            access_token: authObj.access_token,
-          }),
-        })
-          .then((res) => res.json())
-          .then((res) => {
-            console.log(res);
-          });
-      },
     });
   };
 
@@ -132,10 +115,12 @@ const SignIn = ({ goSignup }) => {
             )}
           </StInputWrapper>
           <StButtonWrapper>
-            <StButton type="button" onClick={onKakaoLoginHandler}>
-              KaKao 로그인
-            </StButton>
+            <Kakao />
             <StButton type="submit" disabled={isSubmitting}>
+              <img
+                src="https://download-hub.com/wp-content/uploads/2021/02/Daangn.png"
+                alt=""
+              />
               로그인
             </StButton>
           </StButtonWrapper>
@@ -211,14 +196,17 @@ const StButton = styled.button`
   background-color: #fda473;
   color: #ffffff;
   border-radius: 10px;
-  background-image: url("https://download-hub.com/wp-content/uploads/2021/02/Daangn.png");
-  background-size: 20px 20px;
-  background-repeat: no-repeat;
-  background-position: left 10% center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & img {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 1rem;
+  }
 
   &[type="button"] {
     margin-right: 1rem;
-    background-image: url("https://online.spartacodingclub.kr/static/media/ic_kko.e96d6941.svg");
     color: black;
     background-color: #ffe500;
   }

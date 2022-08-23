@@ -1,3 +1,6 @@
+
+import Home from "../pages/Home";
+
 import { Navigate, Route, Routes } from "react-router-dom";
 import Example from "../pages/Example";
 import Login from "../pages/Login";
@@ -13,10 +16,11 @@ const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Example />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/write" element={<Write />} />
       <Route path="/mypage" element={<Mypage />} />
-      <Route path="/kakao" element={<Kakao />} />
+      <Route path="/oauth" element={<Kakao />} />
       <Route path="/detail/:postId" element={<Detail />} />
       <Route path="/chatlist" element={<ChatList />} />
       <Route path="/chatting/:userId" element={<Chatting />} />
