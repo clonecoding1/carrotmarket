@@ -24,7 +24,6 @@ function Kakao(props) {
 
   useEffect(() => {
     window.Kakao.init("1a9ee1ea3e720eb495d2873df8c6923f");
-    console.log(window.Kakao.isInitialized());
   }, []);
 
   return (
@@ -36,10 +35,7 @@ function Kakao(props) {
         onFail={(res) => socialLoginFail(res)}
         getProfile={true}
       >
-        <img
-          src="https://online.spartacodingclub.kr/static/media/ic_kko.e96d6941.svg"
-          alt=""
-        />
+        <img src="https://online.spartacodingclub.kr/static/media/ic_kko.e96d6941.svg" alt="" />
         카카오 로그인
       </KakaoLogin>
     </StButon>
