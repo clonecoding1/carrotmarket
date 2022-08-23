@@ -9,8 +9,6 @@ import Mypage from "../pages/Mypage";
 import Kakao from "./../pages/Kakao";
 import Detail from "../pages/Detail";
 
-
-
 const Router = () => {
   // 나중에 로그인 유무에 따른 alert를 여기서 전부 처리하기
   return (
@@ -20,7 +18,7 @@ const Router = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/write" element={<Write />} />
       <Route path="/mypage" element={<Mypage />} />
-      <Route path="/kakao" element={<Kakao />} />
+      <Route path="/oauth" element={<Kakao />} />
       <Route path="/detail/:postId" element={<Detail />} />
       <Route path="/*" element={<Navigate to="/" />} />
     </Routes>
