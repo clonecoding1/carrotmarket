@@ -17,6 +17,7 @@ const Mypage = () => {
   const [userInfo, setUserInfo] = useState({});
   const [list, setList] = useState([]);
 
+  //찜한목록
   const onZzimHandler = () => {
     zzim.current.className = "icons active";
     sell.current.className = "icons";
@@ -31,6 +32,7 @@ const Mypage = () => {
     });
   };
 
+  //판매목록
   const onSellHandler = () => {
     zzim.current.className = "icons";
     sell.current.className = "icons active";
