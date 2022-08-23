@@ -40,10 +40,12 @@ const Home = () => {
                 <img src={post.img} alt="post" />
               </StImg>
               <StComment>
-                <span>{post.title}</span>
-                <span>{post.nickname}</span>
-                <span>{post.price}원</span>
-                <span>{post.location}</span>
+                <span className="title">{post.title}</span>
+                <span className="nickname">{post.nickname}</span>
+                <span className="price">
+                  {Number(post.price).toLocaleString()}원
+                </span>
+                <span className="location">{post.location}</span>
                 {/* <span style={{ textAlign: "right" }}>♡{post.likeCount}</span> */}
                 <div style={{ textAlign: "right" }}>
                   <BsFillEmojiHeartEyesFill />
@@ -74,18 +76,19 @@ const StContainer = styled.div`
 `;
 const StCard = styled.div`
   display: flex;
-
+  padding: 1rem;
   height: 200px;
   border-bottom: 1px solid red;
 `;
 const StImg = styled.div`
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   background-size: cover;
 
   & img {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
   }
 `;
 const StComment = styled.div`
@@ -96,5 +99,19 @@ const StComment = styled.div`
   & span {
     padding: 5px;
     padding-left: 20px;
+  }
+  & .title {
+    font-weight: bold;
+  }
+  & .nickname {
+    font-size: small;
+    color: #868383;
+  }
+  & .price {
+    font-weight: bold;
+  }
+  & .location {
+    font-size: medium;
+    color: #3a3939;
   }
 `;
