@@ -17,13 +17,6 @@ const Mypage = () => {
   const sell = useRef();
   const [userInfo, setUserInfo] = useState({});
   const [userLikeList, setUserLikeList] = useState([]);
-  const { isLogin, userToken, user } = useSelector((state) => state.tokenSlice);
-
-  const alerts = () => {
-    Swal.fire({ icon: "error", text: "로그인 후 이용해주세요" }).then((res) => {
-      navigate("/", { replace: true });
-    });
-  };
 
   const realAlert = () => {
     Swal.fire({
@@ -47,14 +40,9 @@ const Mypage = () => {
     });
   };
 
-  useEffect(() => {
-    if (isLogin === false) {
-      alerts();
-      navigate("/", { replace: true });
-    } else {
-      dispatch(getUserInfo());
-    }
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getUserInfo());
+  // }, []);
 
   useEffect(() => {
     getUser().then((res) => {
