@@ -60,7 +60,6 @@ const Signup = ({ goSignin }) => {
     }
   }, [nickname.current]);
 
-  console.log(dupEmailText, dupNicknameText);
   //이메일 중복검사
   const onDupEmail = () => {
     const regex = /\S+@\S+\.\S+/;
