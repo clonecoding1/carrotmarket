@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 
 import { postSignup, dupNickname, dupEmail } from "../../api/loginAPI";
@@ -13,7 +13,9 @@ const Signup = ({ goSignin }) => {
     formState: { isSubmitting, errors },
   } = useForm();
   const [dupEmailText, setDupEmailText] = useState(false);
+  const [dupEmailCurrent, setDupEmailCurrent] = useState("");
   const [dupNicknameText, setDupNicknameText] = useState(false);
+  const [dupNicknameCurrent, setDupNicknameCurrent] = useState("");
   const [profile, setProfile] = useState("https://www.daangn.com/logo.png");
   const email = useRef();
   const password = useRef();
@@ -36,13 +38,29 @@ const Signup = ({ goSignin }) => {
       swalert("error", "닉네임 중복검사를 다시 확인해주세요");
       return;
     }
-    postSignup({ ...data, profile }).then((res) => {
-      swalert("success", "회원가입이 완료되었습니다.");
-      goSignin();
-      e.target.reset();
-    });
+    swalert("success", "굿");
+    // postSignup({ ...data, profile }).then((res) => {
+    //   swalert("success", "회원가입이 완료되었습니다.");
+    //   goSignin();
+    //   e.target.reset();
+    // });
   };
 
+  //이메일 수정할때 다시 false로 돌림
+  useEffect(() => {
+    if (dupEmailCurrent !== email.current) {
+      setDupEmailText(false);
+    }
+  }, [email.current]);
+
+  //닉네임 수정할때 다시 false로 돌림
+  useEffect(() => {
+    if (dupNicknameCurrent !== nickname.current) {
+      setDupNicknameText(false);
+    }
+  }, [nickname.current]);
+
+  console.log(dupEmailText, dupNicknameText);
   //이메일 중복검사
   const onDupEmail = () => {
     const regex = /\S+@\S+\.\S+/;
@@ -50,6 +68,7 @@ const Signup = ({ goSignin }) => {
       dupEmail({ email: email.current }).then((res) => {
         if (res.result) {
           setDupEmailText(true);
+          setDupEmailCurrent(email.current);
           swalert("success", "사용 가능한 이메일입니다.");
         } else {
           swalert("error", "사용 불가능한 이메일입니다.");
@@ -68,6 +87,7 @@ const Signup = ({ goSignin }) => {
       dupNickname({ nickname: nickname.current }).then((res) => {
         if (res.result) {
           setDupNicknameText(true);
+          setDupNicknameCurrent(nickname.current.length);
           swalert("success", "사용 가능한 닉네임입니다.");
         } else {
           swalert("error", "사용 불가능한 닉네임입니다.");
