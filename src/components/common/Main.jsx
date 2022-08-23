@@ -12,4 +12,7 @@ const StMain = styled.main`
   flex-shrink: 1;
   flex-basis: auto;
   overflow: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
