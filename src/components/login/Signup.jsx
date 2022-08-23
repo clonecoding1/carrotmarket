@@ -26,6 +26,7 @@ const Signup = ({ goSignin }) => {
     Swal.fire({ icon, text });
   };
 
+  //서브밋
   const onSubmit = (data, e) => {
     if (dupEmailText === false) {
       swalert("error", "이메일 중복검사를 다시 확인해주세요");
@@ -42,6 +43,7 @@ const Signup = ({ goSignin }) => {
     });
   };
 
+  //이메일 중복검사
   const onDupEmail = () => {
     const regex = /\S+@\S+\.\S+/;
     if (regex.test(email.current)) {
@@ -58,6 +60,7 @@ const Signup = ({ goSignin }) => {
     }
   };
 
+  //이메일 중복검사
   const onDupNickname = () => {
     if (nickname.current.length < 2 || nickname.current.length > 10) {
       swalert("error", "닉네임은 2자리 이상 10자리 이하로 입력해주세요.");
