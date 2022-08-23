@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Carousel from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ImCancelCircle } from "react-icons/im";
+import { AiOutlineHeart } from "react-icons/ai";
 
 import { getPostOne } from "../api/postAPI";
 import { getTimeString } from "../utils/timeString";
@@ -64,53 +65,67 @@ const Detail = () => {
     afterChange: handleAfterChange,
   };
 
+  const nav = useNavigate();
+  const chatBtnHandler = () => {
+    nav("/chatlist");
+  };
+
   return (
-    <div>
-      <ImgArea>
-        <CustomCarouse {...carouselOpt}>
-          {post.img &&
-            post.img.map((img) => {
-              return (
-                <PostImg
-                  data-url={img}
-                  onClick={imgClickHandle}
-                  bgsize={post.img && post.img[0].includes("post-img") ? "cover" : "contain"}
-                  key={img}
-                />
-              );
-            })}
-        </CustomCarouse>
-      </ImgArea>
-      <InfoArea>
-        <UserInfo className="fcc">
-          <img src={post.profile ? process.env.REACT_APP_IMGURL + post.profile : null} />
-          <div>
-            <p>{post.nickname}</p>
-            <p>{post.location}</p>
-          </div>
-        </UserInfo>
-        <PostInfo>
-          <div>
-            {post.title} {post.price}원
-          </div>
-          <div>
-            {post.createdAt} · 관심 {post.likeCount}
-          </div>
-          <div>{post.content}</div>
-        </PostInfo>
-      </InfoArea>
-      <ImgModal className="fcc" visible={originImg ? true : false}>
-        <CancelBtn onClick={() => setOriginImg(null)}>
-          <ImCancelCircle />
-        </CancelBtn>
-        <img src={originImg} />
-      </ImgModal>
-      {loading && (
-        <LoadingPage>
-          <img src={process.env.REACT_APP_IMGURL + "logo.png?alt=media&token=fb0a9820-20b9-475c-ba2f-3950d39b163e"} />
-        </LoadingPage>
-      )}
-    </div>
+    <>
+      <div style={{ position: "relative" }}>
+        <ImgArea>
+          <CustomCarouse {...carouselOpt}>
+            {post.img &&
+              post.img.map((img) => {
+                return (
+                  <PostImg
+                    data-url={img}
+                    onClick={imgClickHandle}
+                    bgsize={post.img && post.img[0].includes("post-img") ? "cover" : "contain"}
+                    key={img}
+                  />
+                );
+              })}
+          </CustomCarouse>
+        </ImgArea>
+        <InfoArea>
+          <UserInfo className="fcc">
+            <img src={post.profile ? process.env.REACT_APP_IMGURL + post.profile : null} />
+            <div>
+              <p>{post.nickname}</p>
+              <p>{post.location}</p>
+            </div>
+          </UserInfo>
+          <PostInfo>
+            <div>{post.title}</div>
+            <div>
+              {post.createdAt} · 관심 {post.likeCount}
+            </div>
+            <div>{post.content}</div>
+          </PostInfo>
+        </InfoArea>
+        <ImgModal className="fcc" visible={originImg ? true : false}>
+          <CancelBtn onClick={() => setOriginImg(null)}>
+            <ImCancelCircle />
+          </CancelBtn>
+          <img src={originImg} />
+        </ImgModal>
+        {loading && (
+          <LoadingPage>
+            <img src={process.env.REACT_APP_IMGURL + "logo.png?alt=media&token=fb0a9820-20b9-475c-ba2f-3950d39b163e"} />
+          </LoadingPage>
+        )}
+      </div>
+      <ChatModal className="fcc">
+        <div className="fcc">
+          <p className="fcc">
+            <AiOutlineHeart />
+          </p>
+          <p>{post.price}원</p>
+        </div>
+        <Btn onClick={chatBtnHandler}>채팅하기</Btn>
+      </ChatModal>
+    </>
   );
 };
 
@@ -223,6 +238,44 @@ const LoadingPage = styled.div`
     width: 50%;
     border-radius: 50%;
     background: white;
+  }
+`;
+
+const ChatModal = styled.div`
+  justify-content: space-between !important;
+  width: 60rem;
+  padding: 1rem 2rem 1rem 1rem;
+  position: absolute;
+  bottom: 10rem;
+  background: rgba(255, 138, 61, 0.5);
+  border-radius: 25px;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+
+  div > p {
+    padding: 0 1rem;
+  }
+  div > p:first-child {
+    cursor: pointer;
+    font-size: 3rem;
+    width: 5rem;
+    height: 5rem;
+    border-right: 0.2rem solid rgba(0, 0, 0, 0.1);
+  }
+`;
+const Btn = styled.button`
+  width: 10rem;
+  height: 3.5rem;
+  background: rgb(255, 138, 61);
+  border: 1px solid rgb(255, 138, 61);
+  border-radius: 2.5rem;
+  color: white;
+  font-size: 1.7rem;
+
+  &:hover {
+    background: white;
+    color: rgb(255, 138, 61);
   }
 `;
 
