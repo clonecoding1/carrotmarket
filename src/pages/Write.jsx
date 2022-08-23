@@ -15,7 +15,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { addPost } from "../api/postAPI";
-import { successAlert } from "../utils/swal";
+import { errorAlert, successAlert } from "../utils/swal";
 
 const Write = () => {
   const nav = useNavigate();
@@ -160,8 +160,12 @@ const Write = () => {
     let img = await getImgURL();
     const reqData = { img, title: data.title, content: data.content, price: data.price };
     const answer = await addPost(reqData);
+    console.log(answer);
     if (answer.result) {
       const confirmCheck = await successAlert();
+      if (confirmCheck.isConfirmed || confirmCheck.isDismissed) nav("/");
+    } else {
+      const confirmCheck = await errorAlert();
       if (confirmCheck.isConfirmed || confirmCheck.isDismissed) nav("/");
     }
   };
