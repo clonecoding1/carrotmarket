@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import axios from "../axios/axios";
 import Pagination from "../Pagination";
 import { BsFillEmojiHeartEyesFill } from "react-icons/bs";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -15,8 +15,9 @@ const Home = () => {
 
   useEffect(() => {
     const getPosts = async () => {
-      const res = await axios.get("http://localhost:5000/post");
-      setPostList(res.data);
+      const res = await axios.get("/post");
+      console.log(res);
+      // setPostList(res.data);
     };
     getPosts();
   }, []);
