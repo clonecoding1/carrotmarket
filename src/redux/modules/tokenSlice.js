@@ -11,7 +11,6 @@ const initialState = {
     iat: null,
   },
 };
-console.log(jwtDecode(getCookie("token")));
 
 // reducer counterSlice
 export const tokenSlice = createSlice({
