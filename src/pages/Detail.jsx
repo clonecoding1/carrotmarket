@@ -135,7 +135,6 @@ const ImgArea = styled.div`
   width: 60rem;
   height: 35rem;
   background-color: white;
-  box-shadow: 0 0.3rem 0.3rem -0.3rem;
 `;
 
 const CustomCarouse = styled(Carousel)`
@@ -151,6 +150,8 @@ const PostImg = styled.div`
   cursor: pointer;
   width: 60rem;
   height: 35rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.3rem 0.3rem -0.3rem;
   background: url(${(props) => (props["data-url"] ? process.env.REACT_APP_IMGURL + props["data-url"] : null)});
   background-size: ${(props) => props.bgsize};
   background-position: center;
