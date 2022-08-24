@@ -1,19 +1,18 @@
-import Header from "./Header";
-import Footer from "./Footer";
 import styled from "styled-components";
 
 const Main = (props) => {
-  return (
-    <StMain>
-      {props.children}
-    </StMain>
-  )
-}
+  return <StMain>{props.children}</StMain>;
+};
 
-export default Main
+export default Main;
 
 const StMain = styled.main`
   flex: 1;
-  background-color: cadetblue;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
   overflow: auto;
-`
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
