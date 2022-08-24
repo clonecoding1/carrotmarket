@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { logOut } from "../../redux/modules/tokenSlice";
+import Swal from "sweetalert2";
 
 const Header = () => {
   const nav = useNavigate();
@@ -15,6 +16,30 @@ const Header = () => {
     "/login": "로그인",
     "/write": "중고거래 글쓰기",
   };
+
+  const wantLogoutAlert = () => {
+    Swal.fire({
+      title: "정말 로그아웃 하시겠습니까?",
+      icon: "warning",
+      showDenyButton: true,
+      confirmButtonText: "확인",
+      denyButtonText: `취소`,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        Swal.fire({
+          icon: "notice",
+          title: "로그아웃 하셨습니다.",
+          confirmButtonText: "확인",
+        }).then(() => {
+          dispatch(logOut());
+          nav("/login");
+        });
+      } else {
+        Swal.fire({ title: "로그아웃 취소.", confirmButtonText: "확인" });
+      }
+    });
+  };
+
   return (
     <StHeader>
       {pathname === "/" && (
@@ -29,7 +54,10 @@ const Header = () => {
               onClick={() => {
                 nav("/");
               }}
-              src={process.env.REACT_APP_IMGURL + "mentLogo.png?alt=media&token=7fad5613-8280-4dc3-9779-6e791b924fe9"}
+              src={
+                process.env.REACT_APP_IMGURL +
+                "mentLogo.png?alt=media&token=7fad5613-8280-4dc3-9779-6e791b924fe9"
+              }
             />
           )}
           <SearchInput type="search" placeholder="검색창" />
@@ -37,9 +65,7 @@ const Header = () => {
             onClick={
               isLogin
                 ? () => {
-                    alert("로그아웃 하셨습니다.");
-                    dispatch(logOut());
-                    nav("/");
+                    wantLogoutAlert();
                   }
                 : () => {
                     nav("/login");
@@ -51,7 +77,10 @@ const Header = () => {
         </>
       )}
       {pathname !== "/" && (
-        <HeaderLeft className="fcc" color={pathname.includes("/detail") ? "rgb(255, 138, 61)" : "black"}>
+        <HeaderLeft
+          className="fcc"
+          color={pathname.includes("/detail") ? "rgb(255, 138, 61)" : "black"}
+        >
           <GobackBtn
             onClick={() => {
               nav(-1);
@@ -129,7 +158,8 @@ const SearchInput = styled.input`
     -webkit-appearance: none;
     width: 1rem;
     height: 1rem;
-    background: url("https://cdn-icons-png.flaticon.com/512/70/70287.png") center center no-repeat;
+    background: url("https://cdn-icons-png.flaticon.com/512/70/70287.png")
+      center center no-repeat;
     background-size: 1rem;
     cursor: pointer;
   }
