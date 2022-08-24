@@ -83,7 +83,14 @@ const Detail = () => {
 
   return (
     <>
-      <div style={{ position: "relative" }}>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
+      >
         <ImgArea>
           <CustomCarouse {...carouselOpt}>
             {post.img &&
@@ -92,7 +99,11 @@ const Detail = () => {
                   <PostImg
                     data-url={img}
                     onClick={imgClickHandle}
-                    bgsize={post.img && post.img[0].includes("post-img") ? "cover" : "contain"}
+                    bgsize={
+                      post.img && post.img[0].includes("post-img")
+                        ? "cover"
+                        : "contain"
+                    }
                     key={img}
                   />
                 );
@@ -101,7 +112,13 @@ const Detail = () => {
         </ImgArea>
         <InfoArea>
           <UserInfo className="fcc">
-            <img src={post.profile ? process.env.REACT_APP_IMGURL + post.profile : null} />
+            <img
+              src={
+                post.profile
+                  ? process.env.REACT_APP_IMGURL + post.profile
+                  : null
+              }
+            />
             <div>
               <p>{post.nickname}</p>
               <p>{post.location}</p>
@@ -124,34 +141,44 @@ const Detail = () => {
         </ImgModal>
         {loading && (
           <LoadingPage>
-            <img src={process.env.REACT_APP_IMGURL + "logo.png?alt=media&token=fb0a9820-20b9-475c-ba2f-3950d39b163e"} />
+            <img
+              src={
+                process.env.REACT_APP_IMGURL +
+                "logo.png?alt=media&token=fb0a9820-20b9-475c-ba2f-3950d39b163e"
+              }
+            />
           </LoadingPage>
         )}
+        <ChatModal className="fcc">
+          <div className="fcc">
+            <p className="fcc" onClick={likeHandler}>
+              {likeToggle ? (
+                <AiFillHeart color="rgb(255, 138, 61)" />
+              ) : (
+                <AiOutlineHeart />
+              )}
+            </p>
+            <p>{post.price}원</p>
+          </div>
+          <Btn
+            onClick={() => {
+              nav("/chatlist");
+            }}
+          >
+            채팅하기
+          </Btn>
+        </ChatModal>
       </div>
-      <ChatModal className="fcc">
-        <div className="fcc">
-          <p className="fcc" onClick={likeHandler}>
-            {likeToggle ? <AiFillHeart color="rgb(255, 138, 61)" /> : <AiOutlineHeart />}
-          </p>
-          <p>{post.price}원</p>
-        </div>
-        <Btn
-          onClick={() => {
-            nav("/chatlist");
-          }}
-        >
-          채팅하기
-        </Btn>
-      </ChatModal>
     </>
   );
 };
 
 const ImgArea = styled.div`
-  position: fixed;
+  /* position: fixed;
   top: 0;
-  width: 60rem;
-  height: 35rem;
+  left: 0; */
+  width: 100%;
+  /* height: 35rem; */
   background-color: white;
 `;
 
@@ -166,11 +193,14 @@ const CustomCarouse = styled(Carousel)`
 
 const PostImg = styled.div`
   cursor: pointer;
-  width: 60rem;
+  width: 100%;
   height: 35rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.3rem 0.3rem -0.3rem;
-  background: url(${(props) => (props["data-url"] ? process.env.REACT_APP_IMGURL + props["data-url"] : null)});
+  background: url(${(props) =>
+    props["data-url"]
+      ? process.env.REACT_APP_IMGURL + props["data-url"]
+      : null});
   background-size: ${(props) => props.bgsize};
   background-position: center;
   background-repeat: no-repeat;
@@ -182,7 +212,8 @@ const ImgModal = styled.div`
   opacity: ${(props) => (props.visible ? 1 : 0)};
   z-index: ${(props) => (props.visible ? 100 : -1)};
   top: ${(props) => (props.visible ? 0 : "8rem")};
-  width: 60rem;
+  max-width: 60rem;
+  width: 100%;
   height: 100%;
   transition-duration: 0.6s;
   background: black;
@@ -203,8 +234,8 @@ const CancelBtn = styled.div`
 `;
 
 const InfoArea = styled.div`
-  margin-top: 27rem;
   padding: 2rem;
+  flex: 1;
 `;
 
 const UserInfo = styled.div`
@@ -263,15 +294,15 @@ const LoadingPage = styled.div`
 
 const ChatModal = styled.div`
   justify-content: space-between !important;
-  width: 60rem;
+  width: 100%;
   padding: 1rem 2rem 1rem 1rem;
-  position: absolute;
   bottom: 10rem;
   background: rgba(255, 138, 61, 0.5);
   border-radius: 25px;
   color: white;
   font-size: 2rem;
   font-weight: bold;
+  margin-bottom: 2rem;
 
   div > p {
     padding: 0 1rem;
