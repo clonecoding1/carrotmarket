@@ -12,11 +12,7 @@ function Pagination({ total, limit, page, setPage }) {
         {Array(numPages)
           .fill()
           .map((_, i) => (
-            <Button
-              key={i + 1}
-              onClick={() => setPage(i + 1)}
-              aria-current={page === i + 1 ? "page" : null}
-            >
+            <Button key={i + 1} onClick={() => setPage(i + 1)} aria-current={page === i + 1 ? "page" : null}>
               {i + 1}
             </Button>
           ))}
@@ -42,22 +38,22 @@ const Button = styled.button`
   border-radius: 8px;
   padding: 8px;
   margin: 0;
-  background: black;
+  background: rgba(255, 138, 61, 0.5);
   color: white;
   font-size: 1rem;
 
   &:hover {
-    background: tomato;
+    background: rgb(255, 138, 61);
     cursor: pointer;
     transform: translateY(-2px);
   }
   &[disabled] {
-    background: grey;
+    background: rgba(0, 0, 0, 0.3);
     cursor: revert;
     transform: revert;
   }
   &[aria-current] {
-    background: deeppink;
+    background: rgb(255, 138, 61);
     font-weight: bold;
     cursor: revert;
     transform: revert;

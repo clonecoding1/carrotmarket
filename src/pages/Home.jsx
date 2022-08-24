@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "../axios/axios";
-import Pagination from "../Pagination";
 import { AiOutlinePlus, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+
+import axios from "../axios/axios";
+import Pagination from "../components/Pagination";
+import { getTimeString } from "../utils/timeString";
 
 const Home = () => {
   const nav = useNavigate();
@@ -21,7 +23,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative", height: "100%" }}>
+    <div style={{ position: "relative", height: "100%", padding: "2rem" }}>
       <label>
         페이지 당 표시할 게시물 수:&nbsp;
         <select type="number" value={limit} onChange={({ target: { value } }) => setLimit(Number(value))}>
@@ -32,29 +34,31 @@ const Home = () => {
       </label>
       <StContainer>
         {postList.slice(offset, offset + limit).map((post) => {
+          const repImg = post.img.split(",")[0];
+          const createDate = getTimeString(new Date(post.createdAt));
+          console.log(post.likeCount);
           return (
             <StCard key={post.postId} onClick={() => nav(`/detail/${post.postId}`)}>
               {/* <StCard key={post.postId} onClick={() => {}}> */}
-              <StImg>
-                <img src={process.env.REACT_APP_IMGURL + post.img.split(",")[0]} alt="post" />
-              </StImg>
+              <StImg src={process.env.REACT_APP_IMGURL + repImg} alt="사진을 로딩중입니다." />
               <StComment>
                 <div className="title">{post.title}</div>
-                <div className="nickname">{post.nickname}</div>
+                <div className="createDate">{createDate}</div>
                 <div className="price">{post.price}원</div>
-                <div className="location">{post.location}</div>
-                <div style={{ alignSelf: "flex-end" }}>
-                  <AiOutlineHeart />
-                  {post.likeCount}
-                </div>
+                {post.likeCount && post.likeCount !== 0 && (
+                  <div className="heart">
+                    <AiOutlineHeart />
+                    {post.likeCount}
+                  </div>
+                )}
               </StComment>
             </StCard>
           );
         })}
+        <div style={{ position: "absolute", width: "100%", bottom: "-8rem" }}>
+          <Pagination total={postList.length} limit={limit} page={page} setPage={setPage} />
+        </div>
       </StContainer>
-      <footer>
-        <Pagination total={postList.length} limit={limit} page={page} setPage={setPage} />
-      </footer>
       <AddBtn
         className="fcc"
         onClick={() => {
@@ -72,54 +76,49 @@ export default Home;
 const StContainer = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
 `;
 const StCard = styled.div`
   cursor: pointer;
   display: flex;
-  padding: 1rem;
-  height: 200px;
-  border-bottom: 1px solid red;
+  padding: 1.5rem 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 `;
-const StImg = styled.div`
-  width: 180px;
-  height: 180px;
-  background-size: cover;
-
-  & img {
-    width: 180px;
-    height: 180px;
-    object-fit: cover;
-  }
+const StImg = styled.img`
+  width: 130px;
+  height: 130px;
+  border-radius: 1rem;
+  margin-right: 2rem;
 `;
 const StComment = styled.div`
-  display: flex;
-  flex-direction: column;
-  font-size: large;
-  width: 350px;
-  & span {
-    padding: 5px;
-    padding-left: 20px;
+  flex: 1;
+  position: relative;
+  font-size: 2rem;
+  * {
+    margin-bottom: 0.3rem;
   }
-  & .title {
+  .createDate,
+  .price {
+    font-size: 1.5rem;
+  }
+  .createDate {
+    color: gray;
+  }
+  .price {
     font-weight: bold;
   }
-  & .nickname {
-    font-size: small;
-    color: #868383;
-  }
-  & .price {
-    font-weight: bold;
-  }
-  & .location {
-    font-size: medium;
-    color: #3a3939;
+  .heart {
+    position: absolute;
+    bottom: 0;
+    right: 1rem;
   }
 `;
 
 const AddBtn = styled.button`
-  position: absolute;
+  position: sticky;
   bottom: 5rem;
-  right: 5rem;
+  margin-left: calc(100% - 13rem);
   border-radius: 50%;
   border: 1px solid rgb(255, 138, 61);
   background-color: rgb(255, 138, 61);
