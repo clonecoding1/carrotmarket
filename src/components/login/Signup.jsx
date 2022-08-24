@@ -17,7 +17,9 @@ const Signup = ({ goSignin }) => {
   const [dupEmailCurrent, setDupEmailCurrent] = useState("");
   const [dupNicknameText, setDupNicknameText] = useState(false);
   const [dupNicknameCurrent, setDupNicknameCurrent] = useState("");
-  const [profile, setProfile] = useState("https://www.daangn.com/logo.png");
+  const [profile, setProfile] = useState(
+    "user-img%2Fdefault.jpg?alt=media&token=f6879015-04b7-46b8-98c8-65a0edec861a"
+  );
   const email = useRef();
   const password = useRef();
   const nickname = useRef();
