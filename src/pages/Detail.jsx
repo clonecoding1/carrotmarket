@@ -17,7 +17,6 @@ const Detail = () => {
   const nav = useNavigate();
   const postId = useParams().postId;
   const [post, setPost] = useState({});
-  const [loading, setLoading] = useState(true);
   const [likeToggle, setLikeToggle] = useState(false);
 
   useEffect(() => {
@@ -30,7 +29,6 @@ const Detail = () => {
         };
         setPost(postData);
         setLikeToggle(postData.like);
-        setTimeout(setLoading(false), 1000);
       }
     });
   }, []);
@@ -108,7 +106,7 @@ const Detail = () => {
         </ImgArea>
         <InfoArea>
           <UserInfo className="fcc">
-            <img src={post.profile ? process.env.REACT_APP_IMGURL + post.profile : null} />
+            <img src={post.profile ? (post.profile.includes("user-img") ? process.env.REACT_APP_IMGURL + post.profile : post.profile) : null} />
             <div>
               <p>{post.nickname}</p>
               <p>{post.location}</p>
@@ -117,9 +115,6 @@ const Detail = () => {
           <PostInfo>
             <div>{post.title}</div>
             <div>{post.createdAt}</div>
-            {/* <div>
-              {post.createdAt} · 관심 {post.likeCount}
-            </div> */}
             <div>{post.content}</div>
           </PostInfo>
         </InfoArea>
@@ -129,11 +124,6 @@ const Detail = () => {
           </CancelBtn>
           <img src={originImg} />
         </ImgModal>
-        {loading && (
-          <LoadingPage>
-            <img src={process.env.REACT_APP_IMGURL + "logo.png?alt=media&token=fb0a9820-20b9-475c-ba2f-3950d39b163e"} />
-          </LoadingPage>
-        )}
         <ChatModal className="fcc">
           <div className="fcc">
             <p className="fcc" onClick={likeHandler}>
@@ -155,11 +145,7 @@ const Detail = () => {
 };
 
 const ImgArea = styled.div`
-  /* position: fixed;
-  top: 0;
-  left: 0; */
   width: 100%;
-  /* height: 35rem; */
   background-color: white;
 `;
 
@@ -188,7 +174,7 @@ const PostImg = styled.div`
 const ImgModal = styled.div`
   position: fixed;
   opacity: ${(props) => (props.visible ? 1 : 0)};
-  z-index: ${(props) => (props.visible ? 100 : -1)};
+  z-index: ${(props) => (props.visible ? 10000 : -1)};
   top: ${(props) => (props.visible ? 0 : "8rem")};
   max-width: 60rem;
   width: 100%;
@@ -252,22 +238,6 @@ const PostInfo = styled.div`
   div:nth-child(3) {
     padding: 1rem 0;
     white-space: pre-wrap;
-  }
-`;
-const LoadingPage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  z-index: 10000;
-  width: 60rem;
-  background: rgb(255, 138, 61);
-  img {
-    width: 50%;
-    border-radius: 50%;
-    background: white;
   }
 `;
 

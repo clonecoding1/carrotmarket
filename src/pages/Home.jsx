@@ -32,7 +32,7 @@ const Home = () => {
         flexDirection: "column",
       }}
     >
-      <label>
+      <label style={{ marginTop: "1rem" }}>
         페이지 당 표시할 게시물 수:&nbsp;
         <select
           type="number"
@@ -52,35 +52,24 @@ const Home = () => {
           const repImg = post.img.split(",")[0];
           const createDate = getTimeString(new Date(post.createdAt));
           return (
-            <StCard
-              key={post.postId}
-              onClick={() => nav(`/detail/${post.postId}`)}
-            >
-              <StImg
-                src={process.env.REACT_APP_IMGURL + repImg}
-                alt="사진을 로딩중입니다."
-              />
+            <StCard key={post.postId} onClick={() => nav(`/detail/${post.postId}`)}>
+              <StImg src={process.env.REACT_APP_IMGURL + repImg} alt="사진을 로딩중입니다." />
               <StComment>
                 <div className="title">{post.title}</div>
                 <div className="createDate">{createDate}</div>
                 <div className="price">{post.price}원</div>
-                {/* {post.likeCount !== 0 && (
+                {post.likecount !== 0 && (
                   <div className="heart">
                     <AiOutlineHeart />
-                    {post.likeCount}
+                    {post.likecount}
                   </div>
-                )} */}
+                )}
               </StComment>
             </StCard>
           );
         })}
         <div style={{ position: "absolute", width: "100%", bottom: "-8rem" }}>
-          <Pagination
-            total={postList.length}
-            limit={limit}
-            page={page}
-            setPage={setPage}
-          />
+          <Pagination total={postList.length} limit={limit} page={page} setPage={setPage} />
         </div>
       </StContainer>
       <AddBtn
@@ -121,8 +110,9 @@ const StComment = styled.div`
   position: relative;
   font-size: 2rem;
 
-  & .createDate {
-    margin: 1rem 0;
+  .title {
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .createDate,
@@ -131,6 +121,7 @@ const StComment = styled.div`
   }
   .createDate {
     color: gray;
+    margin: 1rem 0;
   }
   .price {
     font-weight: bold;

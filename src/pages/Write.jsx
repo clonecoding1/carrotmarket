@@ -161,7 +161,7 @@ const Write = () => {
     const reqData = { img, title: data.title, content: data.content, price: data.price };
     const answer = await addPost(reqData);
     if (answer.result) {
-      const confirmCheck = await successAlert();
+      const confirmCheck = await successAlert(answer.message);
       if (confirmCheck.isConfirmed || confirmCheck.isDismissed) nav("/");
     } else {
       const confirmCheck = await errorAlert();
