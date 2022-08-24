@@ -17,6 +17,7 @@ const Home = () => {
   useEffect(() => {
     const getPosts = async () => {
       const res = await axios.get("/post");
+      console.log(res.data.allPost.Posts);
       setPostList(res.data.allPost.Posts);
     };
     getPosts();
@@ -36,21 +37,19 @@ const Home = () => {
         {postList.slice(offset, offset + limit).map((post) => {
           const repImg = post.img.split(",")[0];
           const createDate = getTimeString(new Date(post.createdAt));
-          console.log(post.likeCount);
           return (
             <StCard key={post.postId} onClick={() => nav(`/detail/${post.postId}`)}>
-              {/* <StCard key={post.postId} onClick={() => {}}> */}
               <StImg src={process.env.REACT_APP_IMGURL + repImg} alt="사진을 로딩중입니다." />
               <StComment>
                 <div className="title">{post.title}</div>
                 <div className="createDate">{createDate}</div>
                 <div className="price">{post.price}원</div>
-                {post.likeCount && post.likeCount !== 0 && (
+                {/* {post.likeCount !== 0 && (
                   <div className="heart">
                     <AiOutlineHeart />
                     {post.likeCount}
                   </div>
-                )}
+                )} */}
               </StComment>
             </StCard>
           );

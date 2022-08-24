@@ -6,15 +6,20 @@ import Carousel from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ImCancelCircle } from "react-icons/im";
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import { useSelector } from "react-redux";
 
 import { getPostOne } from "../api/postAPI";
 import { getTimeString } from "../utils/timeString";
+import { addnRemoveLike } from "../api/likeAPI";
 
 const Detail = () => {
+  const nav = useNavigate();
   const postId = useParams().postId;
   const [post, setPost] = useState({});
   const [loading, setLoading] = useState(true);
+  const [likeToggle, setLikeToggle] = useState(false);
+
   useEffect(() => {
     getPostOne(postId).then((answer) => {
       if (answer.result) {
@@ -24,6 +29,7 @@ const Detail = () => {
           createdAt: getTimeString(answer.post.createdAt),
         };
         setPost(postData);
+        setLikeToggle(postData.like);
         setTimeout(setLoading(false), 1000);
       }
     });
@@ -65,9 +71,14 @@ const Detail = () => {
     afterChange: handleAfterChange,
   };
 
-  const nav = useNavigate();
-  const chatBtnHandler = () => {
-    nav("/chatlist");
+  const { isLogin } = useSelector((state) => state.tokenSlice);
+  const likeHandler = async () => {
+    if (isLogin) {
+      const answer = await addnRemoveLike(postId);
+      setLikeToggle(!likeToggle);
+    } else {
+      alert("로그인 후 이용해주세요");
+    }
   };
 
   return (
@@ -98,9 +109,10 @@ const Detail = () => {
           </UserInfo>
           <PostInfo>
             <div>{post.title}</div>
-            <div>
+            <div>{post.createdAt}</div>
+            {/* <div>
               {post.createdAt} · 관심 {post.likeCount}
-            </div>
+            </div> */}
             <div>{post.content}</div>
           </PostInfo>
         </InfoArea>
@@ -118,12 +130,18 @@ const Detail = () => {
       </div>
       <ChatModal className="fcc">
         <div className="fcc">
-          <p className="fcc">
-            <AiOutlineHeart />
+          <p className="fcc" onClick={likeHandler}>
+            {likeToggle ? <AiFillHeart color="rgb(255, 138, 61)" /> : <AiOutlineHeart />}
           </p>
           <p>{post.price}원</p>
         </div>
-        <Btn onClick={chatBtnHandler}>채팅하기</Btn>
+        <Btn
+          onClick={() => {
+            nav("/chatlist");
+          }}
+        >
+          채팅하기
+        </Btn>
       </ChatModal>
     </>
   );
