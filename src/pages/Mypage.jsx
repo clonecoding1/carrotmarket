@@ -16,6 +16,7 @@ const Mypage = () => {
   const sell = useRef();
   const [userInfo, setUserInfo] = useState({});
   const [list, setList] = useState([]);
+  const [myList, setMyList] = useState(false);
 
   //찜한목록
   const onZzimHandler = () => {
@@ -23,7 +24,12 @@ const Mypage = () => {
     sell.current.className = "icons";
     getLikeList().then((res) => {
       if (res.result) {
+        setMyList(false);
         const likeList = [];
+        if (res.res.length === 0) {
+          setList([]);
+          return;
+        }
         for (let i = 0; i < res.res.length; i++) {
           likeList.push(...Object.values(res.res[i]));
           setList(likeList);
@@ -32,12 +38,19 @@ const Mypage = () => {
     });
   };
 
+  console.log(list);
+
   //판매목록
   const onSellHandler = () => {
     zzim.current.className = "icons";
     sell.current.className = "icons active";
     getMyList().then((res) => {
       if (res.result) {
+        setMyList(true);
+        if (res.res.length === 0) {
+          setList([]);
+          return;
+        }
         const likeList = [];
         for (let i = 0; i < res.res.length; i++) {
           likeList.push(...Object.values(res.res[i]));
@@ -128,13 +141,13 @@ const Mypage = () => {
             <div ref={zzim} className="icons active">
               <AiTwotoneHeart />
             </div>
-            <p>찜한 목록</p>
+            <p>관심 목록</p>
           </li>
           <li onClick={onSellHandler}>
             <div ref={sell} className="icons">
               <SiInstacart />
             </div>
-            <p>판매 내역</p>
+            <p>판매 목록</p>
           </li>
         </ul>
       </div>
@@ -157,9 +170,13 @@ const Mypage = () => {
                 <div className="price">{data.price}원</div>
               </div>
               <div className="right">
-                <div className="heart">
-                  <AiTwotoneHeart className={"active"} />
-                </div>
+                {myList ? (
+                  <div className="heart"></div>
+                ) : (
+                  <div className="heart">
+                    <AiTwotoneHeart className={"active"} />
+                  </div>
+                )}
                 <div className="heartCount">
                   <AiOutlineHeart />
                   {data.likeCount}

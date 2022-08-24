@@ -27,7 +27,7 @@ const Header = () => {
     }).then((res) => {
       if (res.isConfirmed) {
         Swal.fire({
-          icon: "notice",
+          icon: "success",
           title: "로그아웃 하셨습니다.",
           confirmButtonText: "확인",
         }).then(() => {
@@ -35,7 +35,11 @@ const Header = () => {
           nav("/login");
         });
       } else {
-        Swal.fire({ title: "로그아웃 취소.", confirmButtonText: "확인" });
+        Swal.fire({
+          icon: "info",
+          title: "로그아웃 취소.",
+          confirmButtonText: "확인",
+        });
       }
     });
   };
@@ -110,6 +114,7 @@ const StHeader = styled.header`
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 0.3rem 0.3rem -0.3rem;
+  z-index: 1000;
 `;
 
 const LogoImg = styled.img`
@@ -146,6 +151,8 @@ const SearchInput = styled.input`
   background: #dadada;
   border: 0;
   border-radius: 0.5rem;
+  flex: 1;
+  margin: 0 2rem;
 
   &:focus {
     outline: 2px solid rgb(255, 138, 61);
