@@ -8,7 +8,8 @@ function Default(props) {
 
   const needLogoutAlert = (text) => {
     Swal.fire({ icon: "error", text: text }).then((result) => {
-      if (result.isConfirmed || result.isDismissed) navigate("/", { replace: true });
+      if (result.isConfirmed || result.isDismissed)
+        navigate("/", { replace: true });
     });
   };
 

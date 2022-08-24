@@ -17,17 +17,31 @@ const Home = () => {
   useEffect(() => {
     const getPosts = async () => {
       const res = await axios.get("/post");
-      console.log(res.data.allPost.Posts);
       setPostList(res.data.allPost.Posts);
     };
     getPosts();
-  }, []);
+  }, [limit]);
 
   return (
-    <div style={{ position: "relative", height: "100%", padding: "2rem" }}>
+    <div
+      style={{
+        position: "relative",
+        height: "100%",
+        padding: "0 2rem",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <label>
         페이지 당 표시할 게시물 수:&nbsp;
-        <select type="number" value={limit} onChange={({ target: { value } }) => setLimit(Number(value))}>
+        <select
+          type="number"
+          value={limit}
+          onChange={({ target: { value } }) => {
+            setPage(1);
+            setLimit(Number(value));
+          }}
+        >
           <option value="4">4</option>
           <option value="8">8</option>
           <option value="12">12</option>
@@ -38,8 +52,14 @@ const Home = () => {
           const repImg = post.img.split(",")[0];
           const createDate = getTimeString(new Date(post.createdAt));
           return (
-            <StCard key={post.postId} onClick={() => nav(`/detail/${post.postId}`)}>
-              <StImg src={process.env.REACT_APP_IMGURL + repImg} alt="사진을 로딩중입니다." />
+            <StCard
+              key={post.postId}
+              onClick={() => nav(`/detail/${post.postId}`)}
+            >
+              <StImg
+                src={process.env.REACT_APP_IMGURL + repImg}
+                alt="사진을 로딩중입니다."
+              />
               <StComment>
                 <div className="title">{post.title}</div>
                 <div className="createDate">{createDate}</div>
@@ -55,7 +75,12 @@ const Home = () => {
           );
         })}
         <div style={{ position: "absolute", width: "100%", bottom: "-8rem" }}>
-          <Pagination total={postList.length} limit={limit} page={page} setPage={setPage} />
+          <Pagination
+            total={postList.length}
+            limit={limit}
+            page={page}
+            setPage={setPage}
+          />
         </div>
       </StContainer>
       <AddBtn
@@ -76,6 +101,7 @@ const StContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  flex: 1;
 `;
 const StCard = styled.div`
   cursor: pointer;
@@ -94,9 +120,11 @@ const StComment = styled.div`
   flex: 1;
   position: relative;
   font-size: 2rem;
-  * {
-    margin-bottom: 0.3rem;
+
+  & .createDate {
+    margin: 1rem 0;
   }
+
   .createDate,
   .price {
     font-size: 1.5rem;
@@ -123,7 +151,7 @@ const AddBtn = styled.button`
   background-color: rgb(255, 138, 61);
 
   width: 8rem;
-  height: 8rem;
+  min-height: 8rem;
 
   font-size: 5rem;
   font-weight: bold;
