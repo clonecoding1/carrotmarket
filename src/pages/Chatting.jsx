@@ -15,13 +15,10 @@ const Chatting = () => {
       retryCount={2} // opt
       promise={test} // opt
       render={({ startPolling, stopPolling, isPolling }) => {
-        if (stopPolling) {
-          return <div> Hello I am start polling</div>;
-        }
         if (isPolling) {
-          return <div> Hello I am polling</div>;
+          return <div> 폴링 중</div>;
         } else {
-          return <div> Hello I stopped polling</div>;
+          return <div> 폴링 종료</div>;
         }
       }}
     />
