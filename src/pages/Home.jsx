@@ -52,8 +52,14 @@ const Home = () => {
           const repImg = post.img.split(",")[0];
           const createDate = getTimeString(new Date(post.createdAt));
           return (
-            <StCard key={post.postId} onClick={() => nav(`/detail/${post.postId}`)}>
-              <StImg src={process.env.REACT_APP_IMGURL + repImg} alt="사진을 로딩중입니다." />
+            <StCard
+              key={post.postId}
+              onClick={() => nav(`/detail/${post.postId}`)}
+            >
+              <StImg
+                src={process.env.REACT_APP_IMGURL + repImg}
+                alt="사진을 로딩중입니다."
+              />
               <StComment>
                 <div className="title">{post.title}</div>
                 <div className="createDate">{createDate}</div>
@@ -69,7 +75,12 @@ const Home = () => {
           );
         })}
         <div style={{ position: "absolute", width: "100%", bottom: "-8rem" }}>
-          <Pagination total={postList.length} limit={limit} page={page} setPage={setPage} />
+          <Pagination
+            total={postList.length}
+            limit={limit}
+            page={page}
+            setPage={setPage}
+          />
         </div>
       </StContainer>
       <AddBtn
@@ -109,8 +120,13 @@ const StComment = styled.div`
   flex: 1;
   position: relative;
   font-size: 2rem;
+  max-width: 41rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   .title {
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
