@@ -97,7 +97,11 @@ const Detail = () => {
                   <PostImg
                     data-url={img}
                     onClick={imgClickHandle}
-                    bgsize={post.img && post.img[0].includes("post-img") ? "cover" : "contain"}
+                    bgsize={
+                      post.img && post.img[0].includes("post-img")
+                        ? "cover"
+                        : "contain"
+                    }
                     key={img}
                   />
                 );
@@ -106,7 +110,15 @@ const Detail = () => {
         </ImgArea>
         <InfoArea>
           <UserInfo className="fcc">
-            <img src={post.profile ? (post.profile.includes("user-img") ? process.env.REACT_APP_IMGURL + post.profile : post.profile) : null} />
+            <img
+              src={
+                post.profile
+                  ? post.profile.includes("user-img")
+                    ? process.env.REACT_APP_IMGURL + post.profile
+                    : post.profile
+                  : null
+              }
+            />
             <div>
               <p>{post.nickname}</p>
               <p>{post.location}</p>
@@ -124,21 +136,27 @@ const Detail = () => {
           </CancelBtn>
           <img src={originImg} />
         </ImgModal>
-        <ChatModal className="fcc">
-          <div className="fcc">
-            <p className="fcc" onClick={likeHandler}>
-              {likeToggle ? <AiFillHeart color="rgb(255, 138, 61)" /> : <AiOutlineHeart />}
-            </p>
-            <p>{post.price}원</p>
-          </div>
-          <Btn
-            onClick={() => {
-              nav("/chatlist");
-            }}
-          >
-            채팅하기
-          </Btn>
-        </ChatModal>
+        <div style={{ paddingBottome: "20px" }}>
+          <ChatModal className="fcc">
+            <div className="fcc">
+              <p className="fcc" onClick={likeHandler}>
+                {likeToggle ? (
+                  <AiFillHeart color="rgb(255, 138, 61)" />
+                ) : (
+                  <AiOutlineHeart />
+                )}
+              </p>
+              <p>{post.price}원</p>
+            </div>
+            <Btn
+              onClick={() => {
+                nav("/chatlist");
+              }}
+            >
+              채팅하기
+            </Btn>
+          </ChatModal>
+        </div>
       </div>
     </>
   );
@@ -164,7 +182,10 @@ const PostImg = styled.div`
   height: 35rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.3rem 0.3rem -0.3rem;
-  background: url(${(props) => (props["data-url"] ? process.env.REACT_APP_IMGURL + props["data-url"] : null)});
+  background: url(${(props) =>
+    props["data-url"]
+      ? process.env.REACT_APP_IMGURL + props["data-url"]
+      : null});
   background-size: ${(props) => props.bgsize};
   background-position: center;
   background-repeat: no-repeat;
