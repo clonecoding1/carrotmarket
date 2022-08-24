@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { IoIosArrowDown, IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -48,22 +48,12 @@ const Header = () => {
     <StHeader>
       {pathname === "/" && (
         <>
-          {isLogin ? (
-            <UserLocationInfo className="fcc">
-              수도권
-              <IoIosArrowDown style={{ marginLeft: ".2rem" }} />
-            </UserLocationInfo>
-          ) : (
-            <LogoImg
-              onClick={() => {
-                nav("/");
-              }}
-              src={
-                process.env.REACT_APP_IMGURL +
-                "mentLogo.png?alt=media&token=7fad5613-8280-4dc3-9779-6e791b924fe9"
-              }
-            />
-          )}
+          <LogoImg
+            onClick={() => {
+              nav("/");
+            }}
+            src={process.env.REACT_APP_IMGURL + "mentLogo.png?alt=media&token=7fad5613-8280-4dc3-9779-6e791b924fe9"}
+          />
           <SearchInput type="search" placeholder="검색창" />
           <Btn
             onClick={
@@ -81,10 +71,7 @@ const Header = () => {
         </>
       )}
       {pathname !== "/" && (
-        <HeaderLeft
-          className="fcc"
-          color={pathname.includes("/detail") ? "rgb(255, 138, 61)" : "black"}
-        >
+        <HeaderLeft className="fcc" color={pathname.includes("/detail") ? "rgb(255, 138, 61)" : "black"}>
           <GobackBtn
             onClick={() => {
               nav(-1);
@@ -138,13 +125,6 @@ const Btn = styled.button`
   }
 `;
 
-const UserLocationInfo = styled.div`
-  cursor: pointer;
-  font-size: 1.2rem;
-  width: 5rem;
-  height: 5rem;
-`;
-
 const SearchInput = styled.input`
   height: 3rem;
   padding: 0 0.5rem;
@@ -165,8 +145,7 @@ const SearchInput = styled.input`
     -webkit-appearance: none;
     width: 1rem;
     height: 1rem;
-    background: url("https://cdn-icons-png.flaticon.com/512/70/70287.png")
-      center center no-repeat;
+    background: url("https://cdn-icons-png.flaticon.com/512/70/70287.png") center center no-repeat;
     background-size: 1rem;
     cursor: pointer;
   }
