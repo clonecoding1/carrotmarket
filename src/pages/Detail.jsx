@@ -99,11 +99,7 @@ const Detail = () => {
                   <PostImg
                     data-url={img}
                     onClick={imgClickHandle}
-                    bgsize={
-                      post.img && post.img[0].includes("post-img")
-                        ? "cover"
-                        : "contain"
-                    }
+                    bgsize={post.img && post.img[0].includes("post-img") ? "cover" : "contain"}
                     key={img}
                   />
                 );
@@ -112,13 +108,7 @@ const Detail = () => {
         </ImgArea>
         <InfoArea>
           <UserInfo className="fcc">
-            <img
-              src={
-                post.profile
-                  ? process.env.REACT_APP_IMGURL + post.profile
-                  : null
-              }
-            />
+            <img src={post.profile ? process.env.REACT_APP_IMGURL + post.profile : null} />
             <div>
               <p>{post.nickname}</p>
               <p>{post.location}</p>
@@ -141,22 +131,13 @@ const Detail = () => {
         </ImgModal>
         {loading && (
           <LoadingPage>
-            <img
-              src={
-                process.env.REACT_APP_IMGURL +
-                "logo.png?alt=media&token=fb0a9820-20b9-475c-ba2f-3950d39b163e"
-              }
-            />
+            <img src={process.env.REACT_APP_IMGURL + "logo.png?alt=media&token=fb0a9820-20b9-475c-ba2f-3950d39b163e"} />
           </LoadingPage>
         )}
         <ChatModal className="fcc">
           <div className="fcc">
             <p className="fcc" onClick={likeHandler}>
-              {likeToggle ? (
-                <AiFillHeart color="rgb(255, 138, 61)" />
-              ) : (
-                <AiOutlineHeart />
-              )}
+              {likeToggle ? <AiFillHeart color="rgb(255, 138, 61)" /> : <AiOutlineHeart />}
             </p>
             <p>{post.price}원</p>
           </div>
@@ -197,10 +178,7 @@ const PostImg = styled.div`
   height: 35rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.3rem 0.3rem -0.3rem;
-  background: url(${(props) =>
-    props["data-url"]
-      ? process.env.REACT_APP_IMGURL + props["data-url"]
-      : null});
+  background: url(${(props) => (props["data-url"] ? process.env.REACT_APP_IMGURL + props["data-url"] : null)});
   background-size: ${(props) => props.bgsize};
   background-position: center;
   background-repeat: no-repeat;
@@ -273,6 +251,7 @@ const PostInfo = styled.div`
   }
   div:nth-child(3) {
     padding: 1rem 0;
+    white-space: pre-wrap;
   }
 `;
 const LoadingPage = styled.div`

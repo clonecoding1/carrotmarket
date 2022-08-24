@@ -160,7 +160,6 @@ const Write = () => {
     let img = await getImgURL();
     const reqData = { img, title: data.title, content: data.content, price: data.price };
     const answer = await addPost(reqData);
-    console.log(answer);
     if (answer.result) {
       const confirmCheck = await successAlert();
       if (confirmCheck.isConfirmed || confirmCheck.isDismissed) nav("/");
