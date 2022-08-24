@@ -6,7 +6,6 @@ import {
   IoChatbubblesSharp,
   IoChatbubblesOutline,
 } from "react-icons/io5";
-import { useState } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -18,8 +17,17 @@ const Footer = () => {
   const pathname = useLocation().pathname;
 
   const alerts = () => {
-    Swal.fire({ icon: "error", text: "로그인 후 이용해주세요" }).then((res) => {
-      nav("/login", { replace: true });
+    Swal.fire({
+      title: "로그인이 필요한 기능입니다",
+      text: "로그인 페이지로 이동하시겠습니까?",
+      icon: "warning",
+      showDenyButton: true,
+      confirmButtonText: "확인",
+      denyButtonText: `취소`,
+    }).then((res) => {
+      if (res.isConfirmed) {
+        nav("/login");
+      }
     });
   };
 

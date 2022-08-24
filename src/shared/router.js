@@ -17,7 +17,7 @@ const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={!isLogin ? <Login /> : <Default />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/write" element={isLogin ? <Write /> : <Default />} />
       <Route path="/mypage" element={isLogin ? <Mypage /> : <Default />} />
       <Route path="/oauth" element={<Kakao />} />

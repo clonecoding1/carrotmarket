@@ -7,6 +7,7 @@ export const postLogin = async (data) => {
     answer.res = res.data;
     answer.result = true;
   } catch (err) {
+    answer.res = err.response;
     answer.result = false;
   }
   return answer;
@@ -19,9 +20,10 @@ export const postSignup = async (data) => {
     answer.res = res.data;
     answer.result = true;
   } catch (err) {
-    console.log(err);
+    answer.res = err.response;
     answer.result = false;
   }
+  return answer;
 };
 
 export const dupEmail = async (data) => {
@@ -31,7 +33,7 @@ export const dupEmail = async (data) => {
     answer.res = res.data;
     answer.result = true;
   } catch (err) {
-    console.log(err);
+    answer.res = err.response;
     answer.result = false;
   }
   return answer;
@@ -44,7 +46,7 @@ export const dupNickname = async (data) => {
     answer.res = res.data;
     answer.result = true;
   } catch (err) {
-    console.log(err);
+    answer.res = err.response;
     answer.result = false;
   }
 
