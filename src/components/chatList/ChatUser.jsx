@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { nonePageAlert } from "../../utils/swal";
 
 const ChatUser = (props) => {
-  const nav = useNavigate();
+  // const nav = useNavigate();
   return (
-    <Container className="fcc" onClick={() => nav(`/chatting/${props.user.userId}`)}>
+    // <Container className="fcc" onClick={() => nav(`/chatting/${props.user.userId}`)}>
+    <Container className="fcc" onClick={() => nonePageAlert()}>
       <img src={process.env.REACT_APP_IMGURL + props.user.profile} />
       <div>
         <p>{props.user.nickname}</p>

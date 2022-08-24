@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "../axios/axios";
 import Pagination from "../Pagination";
-import { BsFillEmojiHeartEyesFill } from "react-icons/bs";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -33,20 +32,19 @@ const Home = () => {
       </label>
       <StContainer>
         {postList.slice(offset, offset + limit).map((post) => {
-          console.log(post.img);
           return (
             <StCard key={post.postId} onClick={() => nav(`/detail/${post.postId}`)}>
+              {/* <StCard key={post.postId} onClick={() => {}}> */}
               <StImg>
                 <img src={process.env.REACT_APP_IMGURL + post.img.split(",")[0]} alt="post" />
               </StImg>
               <StComment>
-                <span className="title">{post.title}</span>
-                <span className="nickname">{post.nickname}</span>
-                <span className="price">{post.price}원</span>
-                <span className="location">{post.location}</span>
-                {/* <span style={{ textAlign: "right" }}>♡{post.likeCount}</span> */}
-                <div style={{ textAlign: "right" }}>
-                  <BsFillEmojiHeartEyesFill />
+                <div className="title">{post.title}</div>
+                <div className="nickname">{post.nickname}</div>
+                <div className="price">{post.price}원</div>
+                <div className="location">{post.location}</div>
+                <div style={{ alignSelf: "flex-end" }}>
+                  <AiOutlineHeart />
                   {post.likeCount}
                 </div>
               </StComment>
@@ -94,10 +92,10 @@ const StImg = styled.div`
   }
 `;
 const StComment = styled.div`
-  font-size: large;
   display: flex;
-  width: 350px;
   flex-direction: column;
+  font-size: large;
+  width: 350px;
   & span {
     padding: 5px;
     padding-left: 20px;
