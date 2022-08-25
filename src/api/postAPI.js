@@ -23,3 +23,18 @@ export const getPostOne = async (postId) => {
   }
   return answer;
 };
+
+export const deletePost = async (postId, password) => {
+  let answer = { result: null };
+  try {
+    const res = await axios.delete(`/post/${postId}`, {
+      data: { password },
+    });
+    console.log(res);
+    answer.result = true;
+  } catch (err) {
+    answer.message = err.response.data.data.msg;
+    answer.result = false;
+  }
+  return answer;
+};
