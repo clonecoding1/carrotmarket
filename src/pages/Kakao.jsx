@@ -1,8 +1,15 @@
 import React, { useEffect } from "react";
 import KakaoLogin from "react-kakao-login";
 import styled from "styled-components";
+import { kakaoLogin } from "../api/kakaoLoginAPI";
+import { setCookie } from "../utils/cookie";
+import { useDispatch } from "react-redux";
+import { logIn } from "../redux/modules/tokenSlice";
+import { useNavigate } from "react-router-dom";
 
 function Kakao(props) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const socialLoginSuccess = (res) => {
     const user = {
       email: res.profile.kakao_account.email,
@@ -10,8 +17,15 @@ function Kakao(props) {
       location: "수도권",
       profile: res.profile.properties.thumbnail_image,
     };
-    console.log(user);
-    console.log(res);
+    kakaoLogin(user).then((res) => {
+      if (res.result) {
+        setCookie("token", res.token);
+        dispatch(logIn());
+        navigate("/", { replace: true });
+      } else {
+        alert("로그인 실패");
+      }
+    });
 
     // axios.post(process.env.REACT_APP_ENDPOINT,{user}).then((res) => {
     //   console.log(res)
