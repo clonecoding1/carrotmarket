@@ -8,7 +8,6 @@ import Mypage from "../pages/Mypage";
 import Kakao from "./../pages/Kakao";
 import Detail from "../pages/Detail";
 import ChatList from "../pages/ChatList";
-import Chatting from "../pages/Chatting";
 import Default from "../pages/Default";
 
 const Router = () => {
@@ -23,7 +22,6 @@ const Router = () => {
       <Route path="/oauth" element={<Kakao />} />
       <Route path="/detail/:postId" element={<Detail />} />
       <Route path="/chatlist" element={isLogin ? <ChatList /> : <Default />} />
-      <Route path="/chatting/:userId" element={isLogin ? <Chatting /> : <Default />} />
       <Route path="/*" element={<Navigate to="/" />} />
     </Routes>
   );
