@@ -145,7 +145,8 @@ const Write = () => {
     } else {
       let img = "";
       for (let i = 0; i < fileList.length; i++) {
-        const filename = fileList[i].name + ("_" + new Date().getTime());
+        let filename = new Date().getTime() + "";
+        filename += i;
         const uploadFile = await uploadBytes(ref(storage, `post-img/${filename}`), fileList[i]);
         const uploadImgURL = await getDownloadURL(uploadFile.ref);
         img += uploadImgURL.split("/o/")[1];

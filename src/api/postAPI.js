@@ -30,7 +30,7 @@ export const deletePost = async (postId, password) => {
     const res = await axios.delete(`/post/${postId}`, {
       data: { password },
     });
-    console.log(res);
+    answer.message = res.data.data.msg;
     answer.result = true;
   } catch (err) {
     answer.message = err.response.data.data.msg;
