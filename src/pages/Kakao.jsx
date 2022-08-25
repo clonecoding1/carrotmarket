@@ -37,14 +37,14 @@ function Kakao(props) {
   };
 
   useEffect(() => {
-    window.Kakao.init("1a9ee1ea3e720eb495d2873df8c6923f");
+    window.Kakao.init(process.env.REACT_APP_KAKAOAPIKEY);
   }, []);
 
   return (
     <StButon>
       <KakaoLogin
         style={{}}
-        jskey="1a9ee1ea3e720eb495d2873df8c6923f"
+        jskey={process.env.REACT_APP_KAKAOJSKEY}
         onSuccess={(res) => socialLoginSuccess(res)}
         onFail={(res) => socialLoginFail(res)}
         getProfile={true}
