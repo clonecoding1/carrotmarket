@@ -15,7 +15,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { addPost } from "../api/postAPI";
-import { errorAlert, successAlert } from "../utils/swal";
+import { errorAlert, maxLengthOverAlert, successAlert } from "../utils/swal";
 
 const Write = () => {
   const nav = useNavigate();
@@ -41,14 +41,14 @@ const Write = () => {
     const dt = new DataTransfer();
     const remainCnt = maxCnt - fileList.length;
     if (!fileList) {
-      if (files.length > maxCnt) console.log(`사진은 최대 ${maxCnt}개 가능`);
+      if (files.length > maxCnt) maxLengthOverAlert(`사진은 최대 ${maxCnt}개 가능`);
       Array.from(files)
         .filter((file, i) => i < maxCnt)
         .forEach((file) => dt.items.add(file));
       setFileList(dt.files);
       return;
     }
-    if (remainCnt < files.length) console.log(`사진은 최대 ${maxCnt}개 가능`);
+    if (remainCnt < files.length) maxLengthOverAlert(`사진은 최대 ${maxCnt}개 가능`);
     Array.from(fileList).forEach((file) => dt.items.add(file));
     Array.from(files)
       .filter((file, i) => i < remainCnt)
@@ -120,7 +120,6 @@ const Write = () => {
 
   // required alert 처리
   const modalRef = useRef(null);
-  const [modalToggle, setModalToggle] = useState();
   const errorsCheck = Object.keys(errors);
   useEffect(() => {
     modalRef.current.innerText = "";
@@ -160,12 +159,11 @@ const Write = () => {
     let img = await getImgURL();
     const reqData = { img, title: data.title, content: data.content, price: data.price };
     const answer = await addPost(reqData);
-    console.log(answer);
     if (answer.result) {
-      const confirmCheck = await successAlert();
+      const confirmCheck = await successAlert(answer.message);
       if (confirmCheck.isConfirmed || confirmCheck.isDismissed) nav("/");
     } else {
-      const confirmCheck = await errorAlert();
+      const confirmCheck = await errorAlert("글쓰기 실패");
       if (confirmCheck.isConfirmed || confirmCheck.isDismissed) nav("/");
     }
   };

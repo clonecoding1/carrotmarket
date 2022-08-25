@@ -1,17 +1,31 @@
 import React, { useEffect } from "react";
 import KakaoLogin from "react-kakao-login";
 import styled from "styled-components";
+import { kakaoLogin } from "../api/kakaoLoginAPI";
+import { setCookie } from "../utils/cookie";
+import { useDispatch } from "react-redux";
+import { logIn } from "../redux/modules/tokenSlice";
+import { useNavigate } from "react-router-dom";
 
 function Kakao(props) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const socialLoginSuccess = (res) => {
     const user = {
       email: res.profile.kakao_account.email,
       nickname: res.profile.properties.nickname,
       location: "수도권",
-      profile: res.profile.properties.profile_image,
+      profile: res.profile.properties.thumbnail_image,
     };
-    console.log(user);
-    console.log(res);
+    kakaoLogin(user).then((res) => {
+      if (res.result) {
+        setCookie("token", res.token);
+        dispatch(logIn());
+        navigate("/", { replace: true });
+      } else {
+        alert("로그인 실패");
+      }
+    });
 
     // axios.post(process.env.REACT_APP_ENDPOINT,{user}).then((res) => {
     //   console.log(res)
@@ -35,7 +49,10 @@ function Kakao(props) {
         onFail={(res) => socialLoginFail(res)}
         getProfile={true}
       >
-        <img src="https://online.spartacodingclub.kr/static/media/ic_kko.e96d6941.svg" alt="" />
+        <img
+          src="https://online.spartacodingclub.kr/static/media/ic_kko.e96d6941.svg"
+          alt=""
+        />
         카카오 로그인
       </KakaoLogin>
     </StButon>
