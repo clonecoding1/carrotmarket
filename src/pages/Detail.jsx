@@ -88,7 +88,10 @@ const Detail = () => {
     const result = await passwordCheckAlert("삭제");
     if (result.isConfirmed) {
       const answer = await deletePost(postId, result.value);
-      answer.result ? successAlert("삭제 성공") : errorAlert(answer.message);
+      if (answer.result) {
+        successAlert("삭제 성공");
+      }
+      errorAlert(answer.message);
     }
   };
 
