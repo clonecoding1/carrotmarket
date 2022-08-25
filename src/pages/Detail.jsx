@@ -9,6 +9,9 @@ import { ImCancelCircle } from "react-icons/im";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 
+import { storage } from "../utils/firebase/firebase";
+import { ref, deleteObject } from "firebase/storage";
+
 import { deletePost, getPostOne } from "../api/postAPI";
 import { getTimeString } from "../utils/timeString";
 import { addnRemoveLike } from "../api/likeAPI";
@@ -26,7 +29,7 @@ const Detail = () => {
         const postData = {
           ...answer.post,
           img: answer.post.img.split(","),
-          createdAt: getTimeString(answer.post.createdAt),
+          createdAt: getTimeString(new Date(answer.post.createdAt)),
         };
         setPost(postData);
         setLikeToggle(postData.like);
@@ -89,9 +92,17 @@ const Detail = () => {
     if (result.isConfirmed) {
       const answer = await deletePost(postId, result.value);
       if (answer.result) {
-        successAlert("삭제 성공");
+        post.img.forEach((img) => {
+          const fileName = img.split("?")[0];
+          const realName = fileName.replace("%2F", "/");
+          const deleteFileRef = ref(storage, realName);
+          deleteObject(deleteFileRef);
+        });
+        const result = await successAlert(answer.message);
+        if (result.isConfirmed || result.isDismissed) nav("/");
+      } else {
+        await errorAlert(answer.message);
       }
-      errorAlert(answer.message);
     }
   };
 
@@ -113,11 +124,7 @@ const Detail = () => {
                   <PostImg
                     data-url={img}
                     onClick={imgClickHandle}
-                    bgsize={
-                      post.img && post.img[0].includes("post-img")
-                        ? "cover"
-                        : "contain"
-                    }
+                    bgsize={post.img && post.img[0].includes("post-img") ? "cover" : "contain"}
                     key={img}
                   />
                 );
@@ -155,11 +162,7 @@ const Detail = () => {
           <ChatModal className="fcc">
             <div className="fcc">
               <p className="fcc" onClick={likeHandler}>
-                {likeToggle ? (
-                  <AiFillHeart color="rgb(255, 138, 61)" />
-                ) : (
-                  <AiOutlineHeart />
-                )}
+                {likeToggle ? <AiFillHeart color="rgb(255, 138, 61)" /> : <AiOutlineHeart />}
               </p>
               <p>{post.price}원</p>
             </div>
@@ -197,10 +200,7 @@ const PostImg = styled.div`
   height: 35rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.3rem 0.3rem -0.3rem;
-  background: url(${(props) =>
-    props["data-url"]
-      ? process.env.REACT_APP_IMGURL + props["data-url"]
-      : null});
+  background: url(${(props) => (props["data-url"] ? process.env.REACT_APP_IMGURL + props["data-url"] : null)});
   background-size: ${(props) => props.bgsize};
   background-position: center;
   background-repeat: no-repeat;
