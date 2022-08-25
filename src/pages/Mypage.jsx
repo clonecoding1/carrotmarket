@@ -116,7 +116,16 @@ const Mypage = () => {
   return (
     <StMypage>
       <div className="header">
-        <img src={process.env.REACT_APP_IMGURL + userInfo.profile} alt="" />
+        <img
+          src={
+            userInfo.profile
+              ? userInfo.profile.includes("user-img")
+                ? process.env.REACT_APP_IMGURL + userInfo.profile
+                : userInfo.profile
+              : null
+          }
+          alt=""
+        />
         <div className="textWrapper">
           <p className={"nickname"}>{userInfo.nickname}</p>
           <p>{userInfo.location}</p>
@@ -365,9 +374,16 @@ const StMypage = styled.div`
 
     & .center {
       flex: 1;
+      max-width: 392.11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       & .title {
         font-size: 1.8rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       & .location {
