@@ -21,10 +21,16 @@ export const tokenSlice = createSlice({
       removeCookie("token");
       state.isLogin = false;
       state.userToken = null;
+      state.user = {
+        nickname: null,
+        userId: null,
+        iat: null,
+      };
     },
     logIn: (state, action) => {
       state.isLogin = true;
       state.userToken = getCookie("token");
+      state.user = jwtDecode(getCookie("token"));
     },
     getUserInfo: (state, action) => {
       state.user = jwtDecode(getCookie("token"));

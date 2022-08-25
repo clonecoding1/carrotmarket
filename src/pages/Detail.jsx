@@ -9,9 +9,10 @@ import { ImCancelCircle } from "react-icons/im";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 
-import { getPostOne } from "../api/postAPI";
+import { deletePost, getPostOne } from "../api/postAPI";
 import { getTimeString } from "../utils/timeString";
 import { addnRemoveLike } from "../api/likeAPI";
+import { errorAlert, likeAlert, passwordCheckAlert, successAlert } from "../utils/swal";
 
 const Detail = () => {
   const nav = useNavigate();
@@ -73,9 +74,21 @@ const Detail = () => {
   const likeHandler = async () => {
     if (isLogin) {
       const answer = await addnRemoveLike(postId);
-      setLikeToggle(!likeToggle);
+      if (answer.result) {
+        likeAlert(answer.message);
+        setLikeToggle(!likeToggle);
+      }
     } else {
       alert("로그인 후 이용해주세요");
+    }
+  };
+
+  const userId = useSelector((state) => state.tokenSlice.user.userId);
+  const deleteHandler = async () => {
+    const result = await passwordCheckAlert("삭제");
+    if (result.isConfirmed) {
+      const answer = await deletePost(postId, result.value);
+      answer.result ? successAlert("삭제 성공") : errorAlert(answer.message);
     }
   };
 
@@ -106,11 +119,18 @@ const Detail = () => {
         </ImgArea>
         <InfoArea>
           <UserInfo className="fcc">
-            <img src={post.profile ? (post.profile.includes("user-img") ? process.env.REACT_APP_IMGURL + post.profile : post.profile) : null} />
-            <div>
-              <p>{post.nickname}</p>
-              <p>{post.location}</p>
+            <div className="fcc">
+              <img src={post.profile ? (post.profile.includes("user-img") ? process.env.REACT_APP_IMGURL + post.profile : post.profile) : null} />
+              <div>
+                <p>{post.nickname}</p>
+                <p>{post.location}</p>
+              </div>
             </div>
+            {post.userId === userId ? (
+              <Btn onClick={deleteHandler} style={{ width: "6rem", marginRight: "2rem" }}>
+                삭제
+              </Btn>
+            ) : null}
           </UserInfo>
           <PostInfo>
             <div>{post.title}</div>
@@ -203,20 +223,20 @@ const InfoArea = styled.div`
 `;
 
 const UserInfo = styled.div`
-  justify-content: flex-start !important;
+  justify-content: space-between !important;
   padding-bottom: 2rem;
   border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
-  img {
+  div > img {
     width: 5rem;
     height: 5rem;
     border: 0.1rem solid #dadada;
     border-radius: 50%;
   }
-  div {
+  div > div {
     margin-left: 1rem;
     font-size: 1.2rem;
   }
-  div > p:first-child {
+  div > div > p:first-child {
     font-weight: bold;
     font-size: 1.5rem;
   }
