@@ -80,6 +80,7 @@ const StFooter = styled.footer`
   align-items: center;
 
   box-shadow: 0 -0.3rem 0.3rem -0.3rem;
+  z-index: 1000;
 `;
 
 const FooterNav = styled.ul`

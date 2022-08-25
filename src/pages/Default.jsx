@@ -24,6 +24,8 @@ function Default(props) {
     }).then((res) => {
       if (res.isConfirmed) {
         navigate("/login");
+      } else {
+        navigate(-1);
       }
     });
   };

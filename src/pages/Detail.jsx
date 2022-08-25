@@ -9,15 +9,15 @@ import { ImCancelCircle } from "react-icons/im";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 
-import { getPostOne } from "../api/postAPI";
+import { deletePost, getPostOne } from "../api/postAPI";
 import { getTimeString } from "../utils/timeString";
 import { addnRemoveLike } from "../api/likeAPI";
+import { errorAlert, likeAlert, passwordCheckAlert, successAlert } from "../utils/swal";
 
 const Detail = () => {
   const nav = useNavigate();
   const postId = useParams().postId;
   const [post, setPost] = useState({});
-  const [loading, setLoading] = useState(true);
   const [likeToggle, setLikeToggle] = useState(false);
 
   useEffect(() => {
@@ -30,7 +30,6 @@ const Detail = () => {
         };
         setPost(postData);
         setLikeToggle(postData.like);
-        setTimeout(setLoading(false), 1000);
       }
     });
   }, []);
@@ -75,15 +74,37 @@ const Detail = () => {
   const likeHandler = async () => {
     if (isLogin) {
       const answer = await addnRemoveLike(postId);
-      setLikeToggle(!likeToggle);
+      if (answer.result) {
+        likeAlert(answer.message);
+        setLikeToggle(!likeToggle);
+      }
     } else {
       alert("로그인 후 이용해주세요");
     }
   };
 
+  const userId = useSelector((state) => state.tokenSlice.user.userId);
+  const deleteHandler = async () => {
+    const result = await passwordCheckAlert("삭제");
+    if (result.isConfirmed) {
+      const answer = await deletePost(postId, result.value);
+      if (answer.result) {
+        successAlert("삭제 성공");
+      }
+      errorAlert(answer.message);
+    }
+  };
+
   return (
     <>
-      <div style={{ position: "relative" }}>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
+      >
         <ImgArea>
           <CustomCarouse {...carouselOpt}>
             {post.img &&
@@ -92,7 +113,11 @@ const Detail = () => {
                   <PostImg
                     data-url={img}
                     onClick={imgClickHandle}
-                    bgsize={post.img && post.img[0].includes("post-img") ? "cover" : "contain"}
+                    bgsize={
+                      post.img && post.img[0].includes("post-img")
+                        ? "cover"
+                        : "contain"
+                    }
                     key={img}
                   />
                 );
@@ -101,18 +126,22 @@ const Detail = () => {
         </ImgArea>
         <InfoArea>
           <UserInfo className="fcc">
-            <img src={post.profile ? process.env.REACT_APP_IMGURL + post.profile : null} />
-            <div>
-              <p>{post.nickname}</p>
-              <p>{post.location}</p>
+            <div className="fcc">
+              <img src={post.profile ? (post.profile.includes("user-img") ? process.env.REACT_APP_IMGURL + post.profile : post.profile) : null} />
+              <div>
+                <p>{post.nickname}</p>
+                <p>{post.location}</p>
+              </div>
             </div>
+            {post.userId === userId ? (
+              <Btn onClick={deleteHandler} style={{ width: "6rem", marginRight: "2rem" }}>
+                삭제
+              </Btn>
+            ) : null}
           </UserInfo>
           <PostInfo>
             <div>{post.title}</div>
             <div>{post.createdAt}</div>
-            {/* <div>
-              {post.createdAt} · 관심 {post.likeCount}
-            </div> */}
             <div>{post.content}</div>
           </PostInfo>
         </InfoArea>
@@ -122,36 +151,34 @@ const Detail = () => {
           </CancelBtn>
           <img src={originImg} />
         </ImgModal>
-        {loading && (
-          <LoadingPage>
-            <img src={process.env.REACT_APP_IMGURL + "logo.png?alt=media&token=fb0a9820-20b9-475c-ba2f-3950d39b163e"} />
-          </LoadingPage>
-        )}
-      </div>
-      <ChatModal className="fcc">
-        <div className="fcc">
-          <p className="fcc" onClick={likeHandler}>
-            {likeToggle ? <AiFillHeart color="rgb(255, 138, 61)" /> : <AiOutlineHeart />}
-          </p>
-          <p>{post.price}원</p>
+        <div style={{ paddingBottome: "20px" }}>
+          <ChatModal className="fcc">
+            <div className="fcc">
+              <p className="fcc" onClick={likeHandler}>
+                {likeToggle ? (
+                  <AiFillHeart color="rgb(255, 138, 61)" />
+                ) : (
+                  <AiOutlineHeart />
+                )}
+              </p>
+              <p>{post.price}원</p>
+            </div>
+            <Btn
+              onClick={() => {
+                nav("/chatlist");
+              }}
+            >
+              채팅하기
+            </Btn>
+          </ChatModal>
         </div>
-        <Btn
-          onClick={() => {
-            nav("/chatlist");
-          }}
-        >
-          채팅하기
-        </Btn>
-      </ChatModal>
+      </div>
     </>
   );
 };
 
 const ImgArea = styled.div`
-  position: fixed;
-  top: 0;
-  width: 60rem;
-  height: 35rem;
+  width: 100%;
   background-color: white;
 `;
 
@@ -166,11 +193,14 @@ const CustomCarouse = styled(Carousel)`
 
 const PostImg = styled.div`
   cursor: pointer;
-  width: 60rem;
+  width: 100%;
   height: 35rem;
   border-radius: 0.5rem;
   box-shadow: 0 0.3rem 0.3rem -0.3rem;
-  background: url(${(props) => (props["data-url"] ? process.env.REACT_APP_IMGURL + props["data-url"] : null)});
+  background: url(${(props) =>
+    props["data-url"]
+      ? process.env.REACT_APP_IMGURL + props["data-url"]
+      : null});
   background-size: ${(props) => props.bgsize};
   background-position: center;
   background-repeat: no-repeat;
@@ -180,9 +210,10 @@ const PostImg = styled.div`
 const ImgModal = styled.div`
   position: fixed;
   opacity: ${(props) => (props.visible ? 1 : 0)};
-  z-index: ${(props) => (props.visible ? 100 : -1)};
+  z-index: ${(props) => (props.visible ? 10000 : -1)};
   top: ${(props) => (props.visible ? 0 : "8rem")};
-  width: 60rem;
+  max-width: 60rem;
+  width: 100%;
   height: 100%;
   transition-duration: 0.6s;
   background: black;
@@ -203,25 +234,25 @@ const CancelBtn = styled.div`
 `;
 
 const InfoArea = styled.div`
-  margin-top: 27rem;
   padding: 2rem;
+  flex: 1;
 `;
 
 const UserInfo = styled.div`
-  justify-content: flex-start !important;
+  justify-content: space-between !important;
   padding-bottom: 2rem;
   border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
-  img {
+  div > img {
     width: 5rem;
     height: 5rem;
     border: 0.1rem solid #dadada;
     border-radius: 50%;
   }
-  div {
+  div > div {
     margin-left: 1rem;
     font-size: 1.2rem;
   }
-  div > p:first-child {
+  div > div > p:first-child {
     font-weight: bold;
     font-size: 1.5rem;
   }
@@ -242,36 +273,21 @@ const PostInfo = styled.div`
   }
   div:nth-child(3) {
     padding: 1rem 0;
-  }
-`;
-const LoadingPage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  z-index: 10000;
-  width: 60rem;
-  background: rgb(255, 138, 61);
-  img {
-    width: 50%;
-    border-radius: 50%;
-    background: white;
+    white-space: pre-wrap;
   }
 `;
 
 const ChatModal = styled.div`
   justify-content: space-between !important;
-  width: 60rem;
+  width: 100%;
   padding: 1rem 2rem 1rem 1rem;
-  position: absolute;
   bottom: 10rem;
   background: rgba(255, 138, 61, 0.5);
   border-radius: 25px;
   color: white;
   font-size: 2rem;
   font-weight: bold;
+  margin-bottom: 2rem;
 
   div > p {
     padding: 0 1rem;
