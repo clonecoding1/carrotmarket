@@ -38,8 +38,6 @@ const Mypage = () => {
     });
   };
 
-  console.log(list);
-
   //판매목록
   const onSellHandler = () => {
     zzim.current.className = "icons";
@@ -117,13 +115,7 @@ const Mypage = () => {
     <StMypage>
       <div className="header">
         <img
-          src={
-            userInfo.profile
-              ? userInfo.profile.includes("user-img")
-                ? process.env.REACT_APP_IMGURL + userInfo.profile
-                : userInfo.profile
-              : null
-          }
+          src={userInfo.profile ? (userInfo.profile.includes("user-img") ? process.env.REACT_APP_IMGURL + userInfo.profile : userInfo.profile) : null}
           alt=""
         />
         <div className="textWrapper">
@@ -135,13 +127,7 @@ const Mypage = () => {
         </div>
       </div>
       <div className="notice">
-        <img
-          src={
-            process.env.REACT_APP_IMGURL +
-            "carrot-pay.jpg?alt=media&token=88f26cfb-a497-4bb9-943a-7f4affa790bf"
-          }
-          alt="상품 이미지"
-        />
+        <img src={process.env.REACT_APP_IMGURL + "carrot-pay.jpg?alt=media&token=88f26cfb-a497-4bb9-943a-7f4affa790bf"} alt="상품 이미지" />
         <p>중고거래는 이제 당근페이로 해보세요</p>
       </div>
       <div className="tap">
