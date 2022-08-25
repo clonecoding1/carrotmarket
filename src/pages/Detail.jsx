@@ -29,7 +29,7 @@ const Detail = () => {
         const postData = {
           ...answer.post,
           img: answer.post.img.split(","),
-          createdAt: getTimeString(new Date(answer.post.createdAt)),
+          createdAt: getTimeString(new Date(answer.post.createdAt - 1000 * 60 * 60 * 9)),
         };
         setPost(postData);
         setLikeToggle(postData.like);
